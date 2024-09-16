@@ -86,6 +86,65 @@ maidrefcode_list = []
 uploaded_pdf_file_list = []
 new_uploaded_pdf_file_path_list = []
 
+def replace_extension_with_pdf(folder_path, filename):
+    """
+    Replace the extension of the given file with '.pdf' in the specified folder and return the new file path.
+
+    :param folder_path: str, the folder where the file is located.
+    :param filename: str, the name of the file whose extension needs to be replaced.
+    :return: str, the new file path with '.pdf' extension.
+    """
+    try:
+        # Construct the full path of the original file
+        original_file_path = os.path.join(folder_path, filename)
+        
+        # Check if the file exists
+        if not os.path.isfile(original_file_path):
+            print(f"Error: File '{filename}' does not exist in '{folder_path}'.")
+            return None
+        
+        # Split the file path into base name and extension
+        base_name, _ = os.path.splitext(filename)
+        
+        # Construct the new file path with '.pdf' extension
+        new_filename = f"{base_name}.pdf"
+        new_file_path = os.path.join(folder_path, new_filename)
+        
+        # Rename the file to the new path
+        os.rename(original_file_path, new_file_path)
+        
+        print(f"File renamed to: {new_file_path}")
+        return new_file_path
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return None
+
+def convert_doctypes_to_pdf(doc_file, pdf_dir):
+    global EXTRACTED_PAGE_IMAGES_FOLDER
+    try:
+        # Use the subprocess module to run the soffice command for conversion
+        process = subprocess.Popen(['soffice', '--headless', '--convert-to', 'pdf', '--outdir', pdf_dir, doc_file])
+        save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"PDF Conversion started!")
+
+        # Wait for the conversion to complete
+        while process.poll() is None:
+            time.sleep(1)  # Sleep for 1 second
+        
+        # Check if the conversion was successful
+        if process.returncode == 0:
+            pdf_path = os.path.join(pdf_dir, f"{os.path.splitext(os.path.basename(doc_file))[0]}.pdf")
+            print(f"Conversion complete. PDF saved to {pdf_path}")
+            save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Conversion complete. PDF saved to {pdf_path}")
+            return pdf_path
+        else:
+            save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"PDF Conversion failed.")
+            print("Conversion failed.")
+            return None
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Error during PDF conversion start: {str(e)}")
+        return None
+
 # Function to extract filenames and content from the input text
 def extract_data_from_text(text):
     # Regular expression to match the pattern
@@ -862,13 +921,40 @@ def upload_files():
 
     for file in files:
         if file and file.filename:
+
             filename = file.filename
-            fullpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(fullpath)
-            uploaded_files.append(filename)
-            uploaded_pdf_file_list.append(fullpath)
+            file_ext = os.path.splitext(filename)[1].lower()
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            
+            # Save the original file
+            file.save(file_path)
+
+            try:
+
+                # Check the file extension and convert if necessary
+                if file_ext in ['.doc', '.docx']:
+                    # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
+                    pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
+                    if pdf_path:
+                        # Replace the original file path with the converted PDF path
+                        uploaded_pdf_file_list.append(pdf_path)
+                        uploaded_files.append(os.path.basename(pdf_path))
+                        # Remove the original .doc or .docx file
+                        os.remove(file_path)
+                    else:
+                        # Handle conversion failure (optional)
+                        return jsonify({'error': 'Error converting file'}), 500
+                else:
+                    # For PDF files or unsupported formats, use the original path
+                    uploaded_pdf_file_list.append(file_path)
+                    uploaded_files.append(filename)
+
+            except Exception as e:
+                print (f"Error has occurred during documents to pdf conversion {e}")
+
     
-    copy_files_to_directory(uploaded_pdf_file_list, EXTRACTED_PROFILE_PICTURE_FOLDER)
+    
+    copy_files_to_directory(uploaded_pdf_file_list, EXTRACTED_PROFILE_PICTURE_FOLDER) ## list of files, dir destination
     print(uploaded_pdf_file_list)
 
     response = {
