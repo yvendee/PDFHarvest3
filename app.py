@@ -25,6 +25,7 @@ from custom_prompt.utils.utils import read_custom_prompt
 from csv_functions.utils.utils import save_csv
 from log_functions.utils.utils import save_log
 from tesseract.utils.utils import extract_text_from_image
+import subprocess
 
 # Build app
 app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/static')
@@ -928,6 +929,7 @@ def upload_files():
             
             # Save the original file
             file.save(file_path)
+            uploaded_files.append(filename)
 
             try:
 
@@ -941,9 +943,11 @@ def upload_files():
                         uploaded_files.append(os.path.basename(pdf_path))
                         # Remove the original .doc or .docx file
                         os.remove(file_path)
+                        print (f"Success converting a file")
                     else:
+                        print (f"Error converting a file")
                         # Handle conversion failure (optional)
-                        return jsonify({'error': 'Error converting file'}), 500
+                        # return jsonify({'error': 'Error converting file'}), 500
                 else:
                     # For PDF files or unsupported formats, use the original path
                     uploaded_pdf_file_list.append(file_path)
@@ -952,7 +956,6 @@ def upload_files():
             except Exception as e:
                 print (f"Error has occurred during documents to pdf conversion {e}")
 
-    
     
     copy_files_to_directory(uploaded_pdf_file_list, EXTRACTED_PROFILE_PICTURE_FOLDER) ## list of files, dir destination
     print(uploaded_pdf_file_list)
