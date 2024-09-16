@@ -228,15 +228,15 @@
         <div class="upload-container" id="uploadContainer">
             <div class="upload-icon">📁</div>
             <div class="upload-text">Drag & drop files or <a href="#" class="upload-link" id="browseLink">Browse</a></div>
-            <div class="upload-formats">Supported formats: PDF</div>
+            <div class="upload-formats">Supported formats: PDF, DOC, DOCX</div>
             <div class="file-list" id="fileList"></div>
-            <input type="file" id="fileInput" accept=".pdf" multiple>
+            <input type="file" id="fileInput" accept=".pdf, .doc, .docx" multiple>
             <button class="upload-button" id="uploadButton">Upload Files</button>
             <div class="spinner hidden" id="spinner"></div>
         </div>
     
         <div class="upload-container" id="ocrUploadContainer">
-            <div class="upload-icon">📁</div>
+            <div class="upload-icon">📄</div>
             <div class="upload-text">Upload Existing OCR.txt <a href="#" class="upload-link" id="ocrBrowseLink">Browse</a></div>
             <div class="upload-formats">Supported formats: TXT</div>
             <div class="file-name" id="ocrFileName"></div> <!-- New element to display filename -->
@@ -418,11 +418,11 @@
                       spinner.classList.add('hidden');
                       uploadButton.classList.remove('hidden');
                       
-                      if (result.session_id) {
-                          window.location.href = `/status?session_id=${result.session_id}`;
-                      } else {
+                    if (result.session_id) {
+                           window.location.href = `/status?session_id=${result.session_id}`;
+                       } else {
                           alert(result.message || 'An error occurred');
-                      }
+                    }
                   })
                   .catch(error => {
                       // Hide spinner and show upload button on error
