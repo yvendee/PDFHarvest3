@@ -1091,15 +1091,15 @@ def process_files(session_id):
                     # Check the file extension and convert if necessary
                     if file_ext in ['.doc', '.docx']:
                         # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
-                        pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
-                        if pdf_path:
+                        converted_pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
+                        if converted_pdf_path:
                             # uploaded_pdf_file_list.append(pdf_path)
                             # Replace the original file path with the converted PDF path
                             # Remove the original .doc or .docx file
                             # os.remove(file_path)
                             print (f"Success converting a file")
-
-                            copy_file(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER)
+                            filename = os.path.basename(converted_pdf_path)
+                            copy_file(converted_pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER)
                         else:
                             print (f"Error converting a file")
                             # Handle conversion failure (optional)
