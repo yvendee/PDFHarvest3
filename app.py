@@ -85,7 +85,68 @@ progress = {}
 image_fullpath_with_face_list = []
 maidrefcode_list = []
 uploaded_pdf_file_list = []
+uploaded_file_list = []
 new_uploaded_pdf_file_path_list = []
+
+
+def copy_file(file_path, extracted_page_images_folder):
+    """
+    Copies a file from the given file path to the output folder.
+
+    :param file_path: Full path of the file to copy.
+    :param extracted_page_images_folder: Path to the destination folder.
+    """
+    # Extract the filename from the file path
+    filename = os.path.basename(file_path)
+    
+    # Construct the destination file path
+    destination_file = os.path.join(extracted_page_images_folder, filename)
+    
+    try:
+        # Ensure the destination directory exists
+        os.makedirs(extracted_page_images_folder, exist_ok=True)
+        
+        # Copy the file
+        shutil.copy(file_path, destination_file)
+        print(f"File '{filename}' copied successfully from '{file_path}' to '{extracted_page_images_folder}'.")
+    
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' does not exist.")
+    
+    except PermissionError:
+        print(f"Error: Permission denied while copying the file '{file_path}'.")
+    
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+def copy_file2(filename, upload_folder, extracted_page_images_folder):
+    """
+    Copies a file from the upload folder to the output folder.
+
+    :param filename: Name of the file to copy.
+    :param upload_folder: Path to the source folder.
+    :param extracted_page_images_folder: Path to the destination folder.
+    """
+    # Construct full file paths
+    source_file = os.path.join(upload_folder, filename)
+    destination_file = os.path.join(extracted_page_images_folder, filename)
+    
+    try:
+        # Ensure the destination directory exists
+        os.makedirs(extracted_page_images_folder, exist_ok=True)
+        
+        # Copy the file
+        shutil.copy(source_file, destination_file)
+        print(f"File '{filename}' copied successfully from '{upload_folder}' to '{extracted_page_images_folder}'.")
+    
+    except FileNotFoundError:
+        print(f"Error: The file '{filename}' does not exist in the source directory '{upload_folder}'.")
+    
+    except PermissionError:
+        print(f"Error: Permission denied while copying the file '{filename}'.")
+    
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 def replace_extension_with_pdf(folder_path, filename):
     """
@@ -903,7 +964,7 @@ def home_page():
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload_files():
-    global last_upload_time, uploaded_pdf_file_list
+    global last_upload_time, uploaded_pdf_file_list, uploaded_file_list
 
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
@@ -917,6 +978,7 @@ def upload_files():
 
     uploaded_files = []
     uploaded_pdf_file_list = []
+    uploaded_file_list = []
     session_id = str(os.urandom(16).hex())
     progress[session_id] = {'current': 0, 'total': len(files)}  # Initialize progress
 
@@ -924,41 +986,44 @@ def upload_files():
         if file and file.filename:
 
             filename = file.filename
+            # print(filename)
             file_ext = os.path.splitext(filename)[1].lower()
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             
             # Save the original file
             file.save(file_path)
             uploaded_files.append(filename)
+            uploaded_file_list.append(file_path)
+            # uploaded_pdf_file_list.append(file_path)
 
-            try:
+    #         try:
 
-                # Check the file extension and convert if necessary
-                if file_ext in ['.doc', '.docx']:
-                    # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
-                    pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
-                    if pdf_path:
-                        # Replace the original file path with the converted PDF path
-                        uploaded_pdf_file_list.append(pdf_path)
-                        uploaded_files.append(os.path.basename(pdf_path))
-                        # Remove the original .doc or .docx file
-                        os.remove(file_path)
-                        print (f"Success converting a file")
-                    else:
-                        print (f"Error converting a file")
-                        # Handle conversion failure (optional)
-                        # return jsonify({'error': 'Error converting file'}), 500
-                else:
-                    # For PDF files or unsupported formats, use the original path
-                    uploaded_pdf_file_list.append(file_path)
-                    uploaded_files.append(filename)
+    #             # Check the file extension and convert if necessary
+    #             if file_ext in ['.doc', '.docx']:
+    #                 # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
+    #                 pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
+    #                 if pdf_path:
+    #                     # Replace the original file path with the converted PDF path
+    #                     uploaded_pdf_file_list.append(pdf_path)
+    #                     uploaded_files.append(os.path.basename(pdf_path))
+    #                     # Remove the original .doc or .docx file
+    #                     os.remove(file_path)
+    #                     print (f"Success converting a file")
+    #                 else:
+    #                     print (f"Error converting a file")
+    #                     # Handle conversion failure (optional)
+    #                     # return jsonify({'error': 'Error converting file'}), 500
+    #             else:
+    #                 # For PDF files or unsupported formats, use the original path
+    #                 uploaded_pdf_file_list.append(file_path)
+    #                 uploaded_files.append(filename)
 
-            except Exception as e:
-                print (f"Error has occurred during documents to pdf conversion {e}")
+    #         except Exception as e:
+    #             print (f"Error has occurred during documents to pdf conversion {e}")
 
     
-    copy_files_to_directory(uploaded_pdf_file_list, EXTRACTED_PROFILE_PICTURE_FOLDER) ## list of files, dir destination
-    print(uploaded_pdf_file_list)
+    # copy_files_to_directory(uploaded_pdf_file_list, EXTRACTED_PROFILE_PICTURE_FOLDER) ## list of files, dir destination
+    # print(uploaded_pdf_file_list)
 
     response = {
         'message': 'Files successfully uploaded',
@@ -999,12 +1064,13 @@ def upload_ocrfile():
 @app.route('/process/<session_id>', methods=['POST'])
 @login_required
 def process_files(session_id):
-    global image_fullpath_with_face_list, maidrefcode_list, uploaded_pdf_file_list, new_uploaded_pdf_file_path_list
+    global image_fullpath_with_face_list, maidrefcode_list, uploaded_pdf_file_list, uploaded_file_list, new_uploaded_pdf_file_path_list
 
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
     def mock_processing():
         try:
+
             print("uploading process started")
             uploaded_files = os.listdir(UPLOAD_FOLDER)
             # print(uploaded_files)
@@ -1014,11 +1080,41 @@ def process_files(session_id):
 
             # for index, filename in enumerate(uploaded_files):
             index = 0
-            for i in range (len(uploaded_pdf_file_list)):
-                pdf_file_path = uploaded_pdf_file_list[i]
-                filename = os.path.basename(pdf_file_path)
+            for i in range (len(uploaded_file_list)):
+                file_path = uploaded_file_list[i]
+                filename = os.path.basename(file_path)
+                file_ext = os.path.splitext(filename)[1].lower()
+
+                ### pdf conversion
+                try:
+
+                    # Check the file extension and convert if necessary
+                    if file_ext in ['.doc', '.docx']:
+                        # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
+                        pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
+                        if pdf_path:
+                            # uploaded_pdf_file_list.append(pdf_path)
+                            # Replace the original file path with the converted PDF path
+                            # Remove the original .doc or .docx file
+                            # os.remove(file_path)
+                            print (f"Success converting a file")
+
+                            copy_file(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER)
+                        else:
+                            print (f"Error converting a file")
+                            # Handle conversion failure (optional)
+                            # return jsonify({'error': 'Error converting file'}), 500
+                    else:
+                        # For PDF files or unsupported formats, use the original path
+                        # uploaded_pdf_file_list.append(file_path)
+                        copy_file(file_path, EXTRACTED_PAGE_IMAGES_FOLDER)
+  
+                except Exception as e:
+                    print (f"Error has occurred during documents to pdf conversion {e}")
+
                 # Simulate processing of each file
                 # time.sleep(3)  # Simulate processing delay
+
                 process_pdf_extract_image(filename)
                 pdf_path = os.path.join(UPLOAD_FOLDER, filename)
                 pdf_to_jpg(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER, session_id, zoom=2) ## ocr and analyzing
@@ -1034,9 +1130,11 @@ def process_files(session_id):
                 rename_files(image_fullpath_with_face_list, maidrefcode_list)
                 rename_files2(new_uploaded_pdf_file_path_list, maidrefcode_list)
                 save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed Completed. Ready to download!")
+            
             except Exception as e:
                 print(f"An error occured: {e}")
                 save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"An error occured: {e}")
+            
             print("uploading process finished")
         except Exception as e:
             print(f"Error during upload processing: {e}")
