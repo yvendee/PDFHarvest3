@@ -1099,7 +1099,7 @@ def process_files(session_id):
                             # os.remove(file_path)
                             print (f"Success converting a file")
                             filename = os.path.basename(converted_pdf_path)
-                            copy_file(converted_pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER)
+                            copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
                         else:
                             print (f"Error converting a file")
                             # Handle conversion failure (optional)
@@ -1107,7 +1107,7 @@ def process_files(session_id):
                     else:
                         # For PDF files or unsupported formats, use the original path
                         # uploaded_pdf_file_list.append(file_path)
-                        copy_file(file_path, EXTRACTED_PAGE_IMAGES_FOLDER)
+                        copy_file(file_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
   
                 except Exception as e:
                     print (f"Error has occurred during documents to pdf conversion {e}")
