@@ -108,6 +108,7 @@ def copy_file(file_path, extracted_page_images_folder):
         
         # Copy the file
         shutil.copy(file_path, destination_file)
+        new_uploaded_pdf_file_path_list.append(destination_file)
         print(f"File '{filename}' copied successfully from '{file_path}' to '{extracted_page_images_folder}'.")
     
     except FileNotFoundError:
