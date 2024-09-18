@@ -802,6 +802,7 @@ def resize_image_if_needed(image_pil):
         return image_pil.resize((new_width, new_height), Image.LANCZOS)
     return image_pil
 
+
 # Function to extract images with faces from a specific PDF file
 def extract_images_with_faces(pdf_path):
     global image_fullpath_with_face_list
@@ -811,8 +812,6 @@ def extract_images_with_faces(pdf_path):
     main_folder = "extracted_images"
     if not os.path.exists(main_folder):
         os.makedirs(main_folder)
-
-    extracted_images = []
 
     pdf_document = fitz.open(pdf_path)
     try:
@@ -826,9 +825,13 @@ def extract_images_with_faces(pdf_path):
             base_image = pdf_document.extract_image(xref)
             image_bytes = base_image["image"]
             image_pil = Image.open(io.BytesIO(image_bytes))
-            image_cv2 = cv2.cvtColor(cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR), cv2.COLOR_BGR2GRAY)
-            faces = face_cascade.detectMultiScale(image_cv2, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-            print(f"number of face detected: {len(faces)}")
+            image_cv2 = cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR)
+
+            # Convert to grayscale for face detection
+            gray_image = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+            print(f"Number of faces detected: {len(faces)}")
+
             if len(faces) > 0 and not face_found:
                 # If a face is detected and no face has been found yet on the first page
                 face_found = True
@@ -836,22 +839,43 @@ def extract_images_with_faces(pdf_path):
                 # Resize the image if needed
                 image_pil = resize_image_if_needed(image_pil)
 
-                # Save the image in the main folder with the PDF base name as the image name
-                image_filename = f"{pdf_basename}_{image_index + 1}.jpg"  # Naming based on image index
-                image_fullpath = os.path.join(main_folder, image_filename)
-                image_pil.save(image_fullpath, "JPEG")
-                extracted_images.append(image_pil)
-                image_fullpath_with_face_list.append(image_fullpath)
+                # Process the first detected face
+                for (x, y, w, h) in faces:
+                    center_x = x + w // 2
+                    center_y = y + h // 2
+
+                    # Calculate new dimensions based on percentages
+                    box_width = int(w * (150 / 100))  # Adjust box width percentage here
+                    box_height = int(h * (150 / 100))  # Adjust box height percentage here
+
+                    # Calculate new top-left and bottom-right coordinates
+                    top_left_x = max(0, center_x - box_width // 2)
+                    top_left_y = max(0, center_y - box_height // 2)
+                    bottom_right_x = min(image_cv2.shape[1], center_x + box_width // 2)
+                    bottom_right_y = min(image_cv2.shape[0], center_y + box_height // 2)
+
+                    # Crop the face within the box
+                    cropped_face = image_cv2[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
+                    
+                    # Convert cropped image to PIL format
+                    cropped_face_image = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
+
+                    # Save the cropped face image
+                    cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
+                    cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
+                    cropped_face_image.save(cropped_face_fullpath, "JPEG")
+                    image_fullpath_with_face_list.append(cropped_face_fullpath)
+                
                 break  # Stop processing further images on the first page once a face is found
 
-        if face_found == False:
+        if not face_found:
             image_fullpath_with_face_list.append("no-picture-found")
 
     except Exception as e:
-        print (f"Error has occurred during face detection {e}")
+        print(f"Error has occurred during face detection: {e}")
 
     pdf_document.close()
-    return extracted_images
+    return image_fullpath_with_face_list
 
 # Load the pre-trained face detection classifier
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -1124,9 +1148,9 @@ def process_files(session_id):
                 
             try:
                 # maidrefcode_list = ['SRANML240075','CML','AA']
-                print(maidrefcode_list)
-                print(image_fullpath_with_face_list)
-                print(new_uploaded_pdf_file_path_list)
+                # print(maidrefcode_list)
+                # print(image_fullpath_with_face_list)
+                # print(new_uploaded_pdf_file_path_list)
 
                 rename_files(image_fullpath_with_face_list, maidrefcode_list)
                 rename_files2(new_uploaded_pdf_file_path_list, maidrefcode_list)
