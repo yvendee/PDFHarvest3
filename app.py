@@ -83,13 +83,13 @@ FILE_DIRECTORY = os.path.dirname(__file__)
 
 progress = {}
 image_fullpath_with_face_list = []
-maidrefcode_list = []
 uploaded_pdf_file_list = []
 uploaded_file_list = []
 new_uploaded_pdf_file_path_list = []
 
 
 def copy_file(file_path, extracted_page_images_folder):
+    
     """
     Copies a file from the given file path to the output folder.
 
@@ -109,7 +109,7 @@ def copy_file(file_path, extracted_page_images_folder):
         # Copy the file
         shutil.copy(file_path, destination_file)
         print(f"File '{filename}' copied successfully from '{file_path}' to '{extracted_page_images_folder}'.")
-    
+        return destination_file
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' does not exist.")
     
@@ -259,47 +259,51 @@ def uppercase_the_first_letter(item):
     processed_words = [word.lower().capitalize() for word in words]
     return ' '.join(processed_words)
 
-def rename_files(image_fullpath_with_face_list, maidrefcode_list): ## rename extracted images with maid ref code
-    # Iterate through both lists simultaneously
-    for i in range(len(image_fullpath_with_face_list)):
+def rename_files(image_fullpath_with_face_list, maid_refcode_list): ## rename extracted images with maid ref code
+    
+    try:
+        # Iterate through both lists simultaneously
+        for i in range(len(image_fullpath_with_face_list)):
 
-        if(image_fullpath_with_face_list[i] == "no-picture-found"):
-            print("no picture found!")
-        else:
-            print("with picture found!")
-        
-            original_path = image_fullpath_with_face_list[i]
-            maidrefcode = maidrefcode_list[i]
+            if(image_fullpath_with_face_list[i] == "no-picture-found"):
+                print("no picture found!")
+            else:
+                print("with picture found!")
+            
+                original_path = image_fullpath_with_face_list[i]
+                maidrefcode = maid_refcode_list[i]
 
-            # Extract filename and extension
-            filename, extension = os.path.splitext(original_path)
+                # Extract filename and extension
+                filename, extension = os.path.splitext(original_path)
 
-            # Check if maidrefcode is not empty
-            if maidrefcode:
-                # Form new filename with maidrefcode and original extension
-                new_filename = f"{maidrefcode}{extension}"
+                # Check if maidrefcode is not empty
+                if maidrefcode:
+                    # Form new filename with maidrefcode and original extension
+                    new_filename = f"{maidrefcode}{extension}"
 
-                # Construct new full path
-                new_fullpath = os.path.join(os.path.dirname(original_path), new_filename)
+                    # Construct new full path
+                    new_fullpath = os.path.join(os.path.dirname(original_path), new_filename)
 
-                try:
-                    # Rename the file
-                    os.rename(original_path, new_fullpath)
+                    try:
+                        # Rename the file
+                        os.rename(original_path, new_fullpath)
 
-                    # Update image_fullpath_with_face_list with new path
-                    image_fullpath_with_face_list[i] = new_fullpath
+                        # Update image_fullpath_with_face_list with new path
+                        image_fullpath_with_face_list[i] = new_fullpath
 
-                except OSError as e:
-                    print(f"Error renaming {original_path} to {new_fullpath}: {e}")
+                    except OSError as e:
+                        print(f"Error renaming {original_path} to {new_fullpath}: {e}")
+    except:
+        pass
 
     # Return the updated image_fullpath_with_face_list
     return image_fullpath_with_face_list
 
-def rename_files2(pdf_file_list, maidrefcode_list):  ## rename input pdf's with maid ref code
+def rename_files2(pdf_file_list, maid_refcode_list):  ## rename input pdf's with maid ref code
     # Iterate through both lists simultaneously
     for i in range(len(pdf_file_list)):
         original_path = pdf_file_list[i]
-        maidrefcode = maidrefcode_list[i]
+        maidrefcode = maid_refcode_list[i]
 
         # Extract filename and extension
         filename, extension = os.path.splitext(original_path)
@@ -329,6 +333,7 @@ def rename_files2(pdf_file_list, maidrefcode_list):  ## rename input pdf's with 
 def summary_generation(total_summary, output_folder, base_name, session_id):
 
     results_from_ocr = total_summary
+    maid_ref_code_value = ""
 
     # Call the function to read and print the content of custom_prompt.txt
     custom_prompt = read_custom_prompt("dynamic/txt/custom_prompt.txt")
@@ -501,7 +506,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
                     maid_ref_code_value = maid_ref_code_value.replace(' ',"")
 
-                    maidrefcode_list.append(maid_ref_code_value)
+                    # maidrefcode_list.append(maid_ref_code_value)
                     summary_dict["maid ref code"] = maid_ref_code_value
 
                 else:
@@ -526,7 +531,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
                     maid_ref_code_value = maid_ref_code_value.replace(' ',"")
 
-                    maidrefcode_list.append(maid_ref_code_value)
+                    # maidrefcode_list.append(maid_ref_code_value)
                     summary_dict["maid ref code"] = maid_ref_code_value
                     
             else:
@@ -554,7 +559,8 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
                 result = result.replace(' ',"")
 
                 summary_dict["maid ref code"] = result
-                maidrefcode_list.append(result)
+                maid_ref_code_value = result
+                # maidrefcode_list.append(result)
 
         except Exception as e:
             print(f"Error occurred: {e}")
@@ -578,7 +584,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             # Remove unnecessary leading and trailing spaces
             maid_ref_code_value = maid_ref_code_value.strip()
 
-            maidrefcode_list.append(maid_ref_code_value)
+            # maidrefcode_list.append(maid_ref_code_value)
             summary_dict["maid ref code"] = maid_ref_code_value
 
 
@@ -697,11 +703,11 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         text_file.write(summary_text)
         text_file.write(f"\n[end]{base_name}[/end]\n")
     
-    return results_from_ocr
+    return results_from_ocr, maid_ref_code_value
 
 ####### PDF to Images Extraction ################
 def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
-    global maidrefcode_list, last_upload_time, maid_status_global
+    global last_upload_time, maid_status_global
 
     # Get the base name of the PDF file to create a subfolder
     base_name = os.path.splitext(os.path.basename(pdf_file))[0]
@@ -767,7 +773,9 @@ def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
     # Close the PDF file
     pdf_document.close()
 
-    results_from_ocr = summary_generation(total_summary, output_folder, base_name, session_id)
+    results_from_ocr, maid_ref_code = summary_generation(total_summary, output_folder, base_name, session_id)
+    # maid_ref_code = "maid_ref_code_test"
+    # results_from_ocr = "test"
 
     # Print the list of page image filenames
     # print(f"List of page images for {pdf_file}: {page_images}")
@@ -780,7 +788,8 @@ def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
         text_file.write(f"\n[end]{base_name}[/end]\n")
 
     # save_log(os.path.join(output_folder, "logs.txt"),"hello")
-    return page_images
+    print(f"maid-ref-code is {maid_ref_code} for {base_name}.pdf" )
+    return page_images, maid_ref_code
 
 ####### PDF to profile Picture Extraction #######
 
@@ -801,9 +810,10 @@ def resize_image_if_needed(image_pil):
         return image_pil.resize((new_width, new_height), Image.LANCZOS)
     return image_pil
 
+
 # Function to extract images with faces from a specific PDF file
 def extract_images_with_faces(pdf_path):
-    global image_fullpath_with_face_list
+    global image_fullpath_with_face_list, face_cascade
     # Get the base name of the PDF file
     pdf_basename = os.path.splitext(os.path.basename(pdf_path))[0]
     # Create the main folder if it doesn't exist
@@ -812,7 +822,6 @@ def extract_images_with_faces(pdf_path):
         os.makedirs(main_folder)
 
     extracted_images = []
-
     pdf_document = fitz.open(pdf_path)
     try:
         # Extract images from the first page only
@@ -820,37 +829,62 @@ def extract_images_with_faces(pdf_path):
         page = pdf_document[page_number]
         image_list = page.get_images(full=True)
         face_found = False  # Flag to track if a face has been found on the first page
-        for image_index, img in enumerate(image_list):
+        for img in image_list:
             xref = img[0]
             base_image = pdf_document.extract_image(xref)
             image_bytes = base_image["image"]
             image_pil = Image.open(io.BytesIO(image_bytes))
-            image_cv2 = cv2.cvtColor(cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR), cv2.COLOR_BGR2GRAY)
-            faces = face_cascade.detectMultiScale(image_cv2, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-            print(f"number of face detected: {len(faces)}")
+            image_cv2 = cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR)
+
+            # Convert to grayscale for face detection
+            gray_image = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+            print(f"Number of faces detected: {len(faces)}")
+
+            box_width_percentage=150
+            box_height_percentage=150
+
+            # Resize the image if needed
+            image_pil = resize_image_if_needed(image_pil)
+
             if len(faces) > 0 and not face_found:
-                # If a face is detected and no face has been found yet on the first page
                 face_found = True
+                for (x, y, w, h) in faces:
+                    center_x = x + w // 2
+                    center_y = y + h // 2
 
-                # Resize the image if needed
-                image_pil = resize_image_if_needed(image_pil)
+                    box_width = int(w * (box_width_percentage / 100))
+                    box_height = int(h * (box_height_percentage / 100))
 
-                # Save the image in the main folder with the PDF base name as the image name
-                image_filename = f"{pdf_basename}_{image_index + 1}.jpg"  # Naming based on image index
-                image_fullpath = os.path.join(main_folder, image_filename)
-                image_pil.save(image_fullpath, "JPEG")
-                extracted_images.append(image_pil)
-                image_fullpath_with_face_list.append(image_fullpath)
-                break  # Stop processing further images on the first page once a face is found
+                    top_left_x = max(0, center_x - box_width // 2)
+                    top_left_y = max(0, center_y - box_height // 2)
+                    bottom_right_x = min(image_cv2.shape[1], center_x + box_width // 2)
+                    bottom_right_y = min(image_cv2.shape[0], center_y + box_height // 2)
 
-        if face_found == False:
+                    # Crop the image to the bounding box
+                    cropped_face = image_cv2[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
+                    cropped_face_pil = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
+                    
+                    # Save the cropped face image
+                    cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
+                    cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
+                    cropped_face_pil.save(cropped_face_fullpath, "JPEG")
+                    extracted_images.append(cropped_face_pil)
+                    break
+                image_fullpath_with_face_list.append(cropped_face_fullpath)
+                
+                # break  # Stop processing further images on the first page once a face is found
+            print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
+
+        if not face_found:
             image_fullpath_with_face_list.append("no-picture-found")
 
     except Exception as e:
-        print (f"Error has occurred during face detection {e}")
+        print(f"Error has occurred during face detection: {e}")
 
     pdf_document.close()
-    return extracted_images
+    
+    return image_fullpath_with_face_list
 
 # Load the pre-trained face detection classifier
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -913,10 +947,9 @@ def index():
 @app.route('/home')
 @login_required
 def home_page():
-    global image_fullpath_with_face_list, maidrefcode_list, new_uploaded_pdf_file_path_list
+    global image_fullpath_with_face_list, new_uploaded_pdf_file_path_list
 
     image_fullpath_with_face_list = []
-    maidrefcode_list = []
     new_uploaded_pdf_file_path_list = []
     # uploaded_pdf_file_path_list = []
 
@@ -964,7 +997,7 @@ def home_page():
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload_files():
-    global last_upload_time, uploaded_pdf_file_list, uploaded_file_list
+    global last_upload_time, uploaded_pdf_file_list, uploaded_file_list, new_uploaded_pdf_file_path_list
 
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
@@ -979,6 +1012,7 @@ def upload_files():
     uploaded_files = []
     uploaded_pdf_file_list = []
     uploaded_file_list = []
+    new_uploaded_pdf_file_path_list = []
     session_id = str(os.urandom(16).hex())
     progress[session_id] = {'current': 0, 'total': len(files)}  # Initialize progress
 
@@ -994,36 +1028,6 @@ def upload_files():
             file.save(file_path)
             uploaded_files.append(filename)
             uploaded_file_list.append(file_path)
-            # uploaded_pdf_file_list.append(file_path)
-
-    #         try:
-
-    #             # Check the file extension and convert if necessary
-    #             if file_ext in ['.doc', '.docx']:
-    #                 # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
-    #                 pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
-    #                 if pdf_path:
-    #                     # Replace the original file path with the converted PDF path
-    #                     uploaded_pdf_file_list.append(pdf_path)
-    #                     uploaded_files.append(os.path.basename(pdf_path))
-    #                     # Remove the original .doc or .docx file
-    #                     os.remove(file_path)
-    #                     print (f"Success converting a file")
-    #                 else:
-    #                     print (f"Error converting a file")
-    #                     # Handle conversion failure (optional)
-    #                     # return jsonify({'error': 'Error converting file'}), 500
-    #             else:
-    #                 # For PDF files or unsupported formats, use the original path
-    #                 uploaded_pdf_file_list.append(file_path)
-    #                 uploaded_files.append(filename)
-
-    #         except Exception as e:
-    #             print (f"Error has occurred during documents to pdf conversion {e}")
-
-    
-    # copy_files_to_directory(uploaded_pdf_file_list, EXTRACTED_PROFILE_PICTURE_FOLDER) ## list of files, dir destination
-    # print(uploaded_pdf_file_list)
 
     response = {
         'message': 'Files successfully uploaded',
@@ -1064,11 +1068,13 @@ def upload_ocrfile():
 @app.route('/process/<session_id>', methods=['POST'])
 @login_required
 def process_files(session_id):
-    global image_fullpath_with_face_list, maidrefcode_list, uploaded_pdf_file_list, uploaded_file_list, new_uploaded_pdf_file_path_list
+    global image_fullpath_with_face_list, uploaded_pdf_file_list, uploaded_file_list, new_uploaded_pdf_file_path_list
 
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
     def mock_processing():
+        new_pdf_list = []
+        maidrefcode_list = []
         try:
 
             print("uploading process started")
@@ -1099,7 +1105,9 @@ def process_files(session_id):
                             # os.remove(file_path)
                             print (f"Success converting a file")
                             filename = os.path.basename(converted_pdf_path)
-                            copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                            new_file_path = copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                            new_pdf_list.append(new_file_path)
+                            
                         else:
                             print (f"Error converting a file")
                             # Handle conversion failure (optional)
@@ -1107,7 +1115,8 @@ def process_files(session_id):
                     else:
                         # For PDF files or unsupported formats, use the original path
                         # uploaded_pdf_file_list.append(file_path)
-                        copy_file(file_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                        new_file_path = copy_file(file_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                        new_pdf_list.append(new_file_path)
   
                 except Exception as e:
                     print (f"Error has occurred during documents to pdf conversion {e}")
@@ -1117,23 +1126,26 @@ def process_files(session_id):
 
                 process_pdf_extract_image(filename)
                 pdf_path = os.path.join(UPLOAD_FOLDER, filename)
-                pdf_to_jpg(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER, session_id, zoom=2) ## ocr and analyzing
+                page_images, maid_ref_code = pdf_to_jpg(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER, session_id, zoom=2) ## ocr and analyzing
                 index += 1
                 progress[session_id]['current'] = index
+                # maidrefcode_list.append(maid_ref_code)
                 
             try:
                 # maidrefcode_list = ['SRANML240075','CML','AA']
-                print(maidrefcode_list)
-                print(image_fullpath_with_face_list)
-                print(new_uploaded_pdf_file_path_list)
+                # maidrefcode_list = ['CP760722', 'EI990522', 'aaa']
+                print(f"maid-ref-code-list: {maidrefcode_list}")
+                print(f"image-path-with-face-path: {image_fullpath_with_face_list}")
+                print(f"new-pdf-list-path: {new_pdf_list}")
+                # print(new_uploaded_pdf_file_path_list)
 
-                rename_files(image_fullpath_with_face_list, maidrefcode_list)
-                rename_files2(new_uploaded_pdf_file_path_list, maidrefcode_list)
+                rename_files(image_fullpath_with_face_list, maidrefcode_list) ## renaming extracted images
+                rename_files2(new_pdf_list, maidrefcode_list) ## renaming input pdf
                 save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed Completed. Ready to download!")
             
             except Exception as e:
                 print(f"An error occured: {e}")
-                save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"An error occured: {e}")
+                save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"An error occured during renaming process: {e}")
             
             print("uploading process finished")
         except Exception as e:
