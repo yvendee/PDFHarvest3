@@ -90,7 +90,7 @@ new_uploaded_pdf_file_path_list = []
 
 
 def copy_file(file_path, extracted_page_images_folder):
-    global new_uploaded_pdf_file_path_list
+    
     """
     Copies a file from the given file path to the output folder.
 
@@ -109,20 +109,16 @@ def copy_file(file_path, extracted_page_images_folder):
         
         # Copy the file
         shutil.copy(file_path, destination_file)
-        new_uploaded_pdf_file_path_list.append(destination_file)
         print(f"File '{filename}' copied successfully from '{file_path}' to '{extracted_page_images_folder}'.")
-    
+        return destination_file
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' does not exist.")
-        new_uploaded_pdf_file_path_list.append("not-exist")
     
     except PermissionError:
         print(f"Error: Permission denied while copying the file '{file_path}'.")
-        new_uploaded_pdf_file_path_list.append("not-exist")
     
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        new_uploaded_pdf_file_path_list.append("not-exist")
 
 def copy_file2(filename, upload_folder, extracted_page_images_folder):
     """
@@ -772,7 +768,8 @@ def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
     # Close the PDF file
     pdf_document.close()
 
-    results_from_ocr = summary_generation(total_summary, output_folder, base_name, session_id)
+    # results_from_ocr = summary_generation(total_summary, output_folder, base_name, session_id)
+    results_from_ocr = "test"
 
     # Print the list of page image filenames
     # print(f"List of page images for {pdf_file}: {page_images}")
@@ -1099,6 +1096,7 @@ def process_files(session_id):
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
     def mock_processing():
+        new_pdf_list = []
         try:
 
             print("uploading process started")
@@ -1129,7 +1127,8 @@ def process_files(session_id):
                             # os.remove(file_path)
                             print (f"Success converting a file")
                             filename = os.path.basename(converted_pdf_path)
-                            copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                            new_file_path = copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                            new_pdf_list.append(new_file_path)
                             
                         else:
                             print (f"Error converting a file")
@@ -1138,7 +1137,8 @@ def process_files(session_id):
                     else:
                         # For PDF files or unsupported formats, use the original path
                         # uploaded_pdf_file_list.append(file_path)
-                        copy_file(file_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                        new_file_path = copy_file(file_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                        new_pdf_list.append(new_file_path)
   
                 except Exception as e:
                     print (f"Error has occurred during documents to pdf conversion {e}")
@@ -1154,13 +1154,12 @@ def process_files(session_id):
                 
             try:
                 # maidrefcode_list = ['SRANML240075','CML','AA']
-                # print(maidrefcode_list)
+                print(f"maid-ref-code-list: {maidrefcode_list}")
                 # print(image_fullpath_with_face_list)
                 # print(new_uploaded_pdf_file_path_list)
 
-                rename_files(image_fullpath_with_face_list, maidrefcode_list)
-                print(new_uploaded_pdf_file_path_list)
-                rename_files2(new_uploaded_pdf_file_path_list, maidrefcode_list)
+                rename_files(image_fullpath_with_face_list, maidrefcode_list) ## renaming extracted images
+                rename_files2(new_pdf_list, maidrefcode_list) ## renaming input pdf
                 save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed Completed. Ready to download!")
             
             except Exception as e:
