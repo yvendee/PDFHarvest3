@@ -1159,12 +1159,13 @@ def process_files(session_id):
                 # print(new_uploaded_pdf_file_path_list)
 
                 rename_files(image_fullpath_with_face_list, maidrefcode_list)
+                print(new_uploaded_pdf_file_path_list)
                 rename_files2(new_uploaded_pdf_file_path_list, maidrefcode_list)
                 save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed Completed. Ready to download!")
             
             except Exception as e:
                 print(f"An error occured: {e}")
-                save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"An error occured: {e}")
+                save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"An error occured during renaming process: {e}")
             
             print("uploading process finished")
         except Exception as e:
