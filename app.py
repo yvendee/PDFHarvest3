@@ -268,7 +268,7 @@ def rename_files(image_fullpath_with_face_list, maid_refcode_list): ## rename ex
             if(image_fullpath_with_face_list[i] == "no-picture-found"):
                 print("no picture found!")
             else:
-                print("with picture found!")
+            #     print("with picture found!")
             
                 original_path = image_fullpath_with_face_list[i]
                 maidrefcode = maid_refcode_list[i]
@@ -821,6 +821,8 @@ def extract_images_with_faces(pdf_path):
     if not os.path.exists(main_folder):
         os.makedirs(main_folder)
 
+
+
     extracted_images = []
     pdf_document = fitz.open(pdf_path)
     try:
@@ -829,6 +831,8 @@ def extract_images_with_faces(pdf_path):
         page = pdf_document[page_number]
         image_list = page.get_images(full=True)
         face_found = False  # Flag to track if a face has been found on the first page
+
+        print(f"image list: {len(image_list)} for {pdf_basename}")
         for img in image_list:
             xref = img[0]
             base_image = pdf_document.extract_image(xref)
@@ -839,66 +843,26 @@ def extract_images_with_faces(pdf_path):
             # Convert to grayscale for face detection
             gray_image = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-            print(f"Number of faces detected: {len(faces)}")
-
-            ## adjust this parameter if needed
-            box_width_percentage=150
-            box_height_percentage=150
+            # print(f"Number of faces detected: {len(faces)}")
 
             # Resize the image if needed
             image_pil = resize_image_if_needed(image_pil0)
 
             if len(faces) > 0 and not face_found:
+                # If a face is detected and no face has been found yet on the first page
                 face_found = True
-                for (x, y, w, h) in faces:
-                    center_x = x + w // 2
-                    center_y = y + h // 2
-
-                    box_width = int(w * (box_width_percentage / 100))
-                    box_height = int(h * (box_height_percentage / 100))
-
-                    top_left_x = max(0, center_x - box_width // 2)
-                    top_left_y = max(0, center_y - box_height // 2)
-                    bottom_right_x = min(image_cv2.shape[1], center_x + box_width // 2)
-                    bottom_right_y = min(image_cv2.shape[0], center_y + box_height // 2)
-
-                    # Crop the image to the bounding box
-                    cropped_face = image_cv2[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
-                    cropped_face_pil = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
-                    
-                    # Save the cropped face image
-                    cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
-                    cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
-                    cropped_face_pil.save(cropped_face_fullpath, "JPEG")
-                    # extracted_images.append(cropped_face_pil)
-
-                    ### verify if the cropped image has a face
-
-                    image_pil2 = Image.open(cropped_face_fullpath)
-                    image_cv2 = cv2.cvtColor(np.array(image_pil2), cv2.COLOR_RGB2BGR)
-
-                    image_cv2 = cv2.cvtColor(cv2.cvtColor(np.array(image_pil2), cv2.COLOR_RGB2BGR), cv2.COLOR_BGR2GRAY)
-                    faces = face_cascade.detectMultiScale(image_cv2, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-                    if len(faces) > 0:
-
-                        if(len(faces) == 1):
-                            # Save the image in the images folder with a fixed name "image.jpg"
-                            image_pil2.save(cropped_face_fullpath, "JPEG")
-                            # extracted_images.append(cropped_face_pil)
-                        else:
-                            image_pil.save(cropped_face_fullpath, "JPEG")
-
-
-                    else:
-                        image_pil.save(cropped_face_fullpath, "JPEG")
-                        # extracted_images.append(cropped_face_pil)
-
-
-                    break
-                image_fullpath_with_face_list.append(cropped_face_fullpath)
                 
-                # break  # Stop processing further images on the first page once a face is found
-            print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
+                image_with_face_filename = f"{pdf_basename}_with_face.jpg"  # Naming based on PDF base name
+                image_with_face_fullpath = os.path.join(main_folder, image_with_face_filename)
+
+                # Save the image 
+                image_pil.save(image_with_face_fullpath, "JPEG")
+                extracted_images.append(image_pil)
+                image_fullpath_with_face_list.append(image_with_face_fullpath)  
+
+                break  # Stop processing further images on the first page once a face is found
+
+        print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
 
         if not face_found:
             image_fullpath_with_face_list.append("no-picture-found")
