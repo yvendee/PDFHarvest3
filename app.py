@@ -90,6 +90,7 @@ new_uploaded_pdf_file_path_list = []
 
 
 def copy_file(file_path, extracted_page_images_folder):
+    global new_uploaded_pdf_file_path_list
     """
     Copies a file from the given file path to the output folder.
 
@@ -113,12 +114,15 @@ def copy_file(file_path, extracted_page_images_folder):
     
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' does not exist.")
+        new_uploaded_pdf_file_path_list.append("not-exist")
     
     except PermissionError:
         print(f"Error: Permission denied while copying the file '{file_path}'.")
+        new_uploaded_pdf_file_path_list.append("not-exist")
     
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+        new_uploaded_pdf_file_path_list.append("not-exist")
 
 def copy_file2(filename, upload_folder, extracted_page_images_folder):
     """
@@ -989,7 +993,7 @@ def home_page():
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload_files():
-    global last_upload_time, uploaded_pdf_file_list, uploaded_file_list
+    global last_upload_time, uploaded_pdf_file_list, uploaded_file_list, new_uploaded_pdf_file_path_list
 
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
@@ -1004,6 +1008,7 @@ def upload_files():
     uploaded_files = []
     uploaded_pdf_file_list = []
     uploaded_file_list = []
+    new_uploaded_pdf_file_path_list = []
     session_id = str(os.urandom(16).hex())
     progress[session_id] = {'current': 0, 'total': len(files)}  # Initialize progress
 
@@ -1125,6 +1130,7 @@ def process_files(session_id):
                             print (f"Success converting a file")
                             filename = os.path.basename(converted_pdf_path)
                             copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                            
                         else:
                             print (f"Error converting a file")
                             # Handle conversion failure (optional)
