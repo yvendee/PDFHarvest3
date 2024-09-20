@@ -1129,7 +1129,7 @@ def process_files(session_id):
                 page_images, maid_ref_code = pdf_to_jpg(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER, session_id, zoom=2) ## ocr and analyzing
                 index += 1
                 progress[session_id]['current'] = index
-                # maidrefcode_list.append(maid_ref_code)
+                maidrefcode_list.append(maid_ref_code)
                 
             try:
                 # maidrefcode_list = ['SRANML240075','CML','AA']
