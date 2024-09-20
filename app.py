@@ -833,8 +833,8 @@ def extract_images_with_faces(pdf_path):
             xref = img[0]
             base_image = pdf_document.extract_image(xref)
             image_bytes = base_image["image"]
-            image_pil = Image.open(io.BytesIO(image_bytes))
-            image_cv2 = cv2.cvtColor(np.array(image_pil), cv2.COLOR_RGB2BGR)
+            image_pil0 = Image.open(io.BytesIO(image_bytes))
+            image_cv2 = cv2.cvtColor(np.array(image_pil0), cv2.COLOR_RGB2BGR)
 
             # Convert to grayscale for face detection
             gray_image = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2GRAY)
@@ -846,7 +846,7 @@ def extract_images_with_faces(pdf_path):
             box_height_percentage=150
 
             # Resize the image if needed
-            image_pil = resize_image_if_needed(image_pil)
+            image_pil = resize_image_if_needed(image_pil0)
 
             if len(faces) > 0 and not face_found:
                 face_found = True
@@ -870,7 +870,30 @@ def extract_images_with_faces(pdf_path):
                     cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
                     cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
                     cropped_face_pil.save(cropped_face_fullpath, "JPEG")
-                    extracted_images.append(cropped_face_pil)
+                    # extracted_images.append(cropped_face_pil)
+
+                    ### verify if the cropped image has a face
+
+                    image_pil2 = Image.open(cropped_face_fullpath)
+                    image_cv2 = cv2.cvtColor(np.array(image_pil2), cv2.COLOR_RGB2BGR)
+
+                    image_cv2 = cv2.cvtColor(cv2.cvtColor(np.array(image_pil2), cv2.COLOR_RGB2BGR), cv2.COLOR_BGR2GRAY)
+                    faces = face_cascade.detectMultiScale(image_cv2, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+                    if len(faces) > 0:
+
+                        if(len(faces) == 1):
+                            # Save the image in the images folder with a fixed name "image.jpg"
+                            image_pil2.save(cropped_face_fullpath, "JPEG")
+                            # extracted_images.append(cropped_face_pil)
+                        else:
+                            image_pil.save(cropped_face_fullpath, "JPEG")
+
+
+                    else:
+                        image_pil.save(cropped_face_fullpath, "JPEG")
+                        # extracted_images.append(cropped_face_pil)
+
+
                     break
                 image_fullpath_with_face_list.append(cropped_face_fullpath)
                 
@@ -897,8 +920,8 @@ def process_pdf_extract_image(filename):
     pdf_path = os.path.join(UPLOAD_FOLDER, filename)
     if os.path.exists(pdf_path) and pdf_path.endswith(".pdf"):
         extracted_images = extract_images_with_faces(pdf_path)
-        print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
-        save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
+        # print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
+        # save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
 
     else:
         print(f"File '{filename}' not found or is not a PDF.")
@@ -1100,10 +1123,6 @@ def process_files(session_id):
                         # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
                         converted_pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
                         if converted_pdf_path:
-                            # uploaded_pdf_file_list.append(pdf_path)
-                            # Replace the original file path with the converted PDF path
-                            # Remove the original .doc or .docx file
-                            # os.remove(file_path)
                             print (f"Success converting a file")
                             filename = os.path.basename(converted_pdf_path)
                             new_file_path = copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
@@ -1111,11 +1130,8 @@ def process_files(session_id):
                             
                         else:
                             print (f"Error converting a file")
-                            # Handle conversion failure (optional)
-                            # return jsonify({'error': 'Error converting file'}), 500
                     else:
                         # For PDF files or unsupported formats, use the original path
-                        # uploaded_pdf_file_list.append(file_path)
                         new_file_path = copy_file(file_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
                         new_pdf_list.append(new_file_path)
   
@@ -1138,7 +1154,6 @@ def process_files(session_id):
                 print(f"maid-ref-code-list: {maidrefcode_list}")
                 print(f"image-path-with-face-path: {image_fullpath_with_face_list}")
                 print(f"new-pdf-list-path: {new_pdf_list}")
-                # print(new_uploaded_pdf_file_path_list)
 
                 rename_files(image_fullpath_with_face_list, maidrefcode_list) ## renaming extracted images
                 rename_files2(new_pdf_list, maidrefcode_list) ## renaming input pdf
