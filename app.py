@@ -83,7 +83,6 @@ FILE_DIRECTORY = os.path.dirname(__file__)
 
 progress = {}
 image_fullpath_with_face_list = []
-maidrefcode_list = []
 uploaded_pdf_file_list = []
 uploaded_file_list = []
 new_uploaded_pdf_file_path_list = []
@@ -260,7 +259,7 @@ def uppercase_the_first_letter(item):
     processed_words = [word.lower().capitalize() for word in words]
     return ' '.join(processed_words)
 
-def rename_files(image_fullpath_with_face_list, maidrefcode_list): ## rename extracted images with maid ref code
+def rename_files(image_fullpath_with_face_list, maid_refcode_list): ## rename extracted images with maid ref code
     # Iterate through both lists simultaneously
     for i in range(len(image_fullpath_with_face_list)):
 
@@ -270,7 +269,7 @@ def rename_files(image_fullpath_with_face_list, maidrefcode_list): ## rename ext
             print("with picture found!")
         
             original_path = image_fullpath_with_face_list[i]
-            maidrefcode = maidrefcode_list[i]
+            maidrefcode = maid_refcode_list[i]
 
             # Extract filename and extension
             filename, extension = os.path.splitext(original_path)
@@ -296,11 +295,11 @@ def rename_files(image_fullpath_with_face_list, maidrefcode_list): ## rename ext
     # Return the updated image_fullpath_with_face_list
     return image_fullpath_with_face_list
 
-def rename_files2(pdf_file_list, maidrefcode_list):  ## rename input pdf's with maid ref code
+def rename_files2(pdf_file_list, maid_refcode_list):  ## rename input pdf's with maid ref code
     # Iterate through both lists simultaneously
     for i in range(len(pdf_file_list)):
         original_path = pdf_file_list[i]
-        maidrefcode = maidrefcode_list[i]
+        maidrefcode = maid_refcode_list[i]
 
         # Extract filename and extension
         filename, extension = os.path.splitext(original_path)
@@ -330,6 +329,7 @@ def rename_files2(pdf_file_list, maidrefcode_list):  ## rename input pdf's with 
 def summary_generation(total_summary, output_folder, base_name, session_id):
 
     results_from_ocr = total_summary
+    maid_ref_code_value = ""
 
     # Call the function to read and print the content of custom_prompt.txt
     custom_prompt = read_custom_prompt("dynamic/txt/custom_prompt.txt")
@@ -502,7 +502,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
                     maid_ref_code_value = maid_ref_code_value.replace(' ',"")
 
-                    maidrefcode_list.append(maid_ref_code_value)
+                    # maidrefcode_list.append(maid_ref_code_value)
                     summary_dict["maid ref code"] = maid_ref_code_value
 
                 else:
@@ -527,7 +527,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
                     maid_ref_code_value = maid_ref_code_value.replace(' ',"")
 
-                    maidrefcode_list.append(maid_ref_code_value)
+                    # maidrefcode_list.append(maid_ref_code_value)
                     summary_dict["maid ref code"] = maid_ref_code_value
                     
             else:
@@ -555,7 +555,8 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
                 result = result.replace(' ',"")
 
                 summary_dict["maid ref code"] = result
-                maidrefcode_list.append(result)
+                maid_ref_code_value = result
+                # maidrefcode_list.append(result)
 
         except Exception as e:
             print(f"Error occurred: {e}")
@@ -579,7 +580,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             # Remove unnecessary leading and trailing spaces
             maid_ref_code_value = maid_ref_code_value.strip()
 
-            maidrefcode_list.append(maid_ref_code_value)
+            # maidrefcode_list.append(maid_ref_code_value)
             summary_dict["maid ref code"] = maid_ref_code_value
 
 
@@ -698,11 +699,11 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         text_file.write(summary_text)
         text_file.write(f"\n[end]{base_name}[/end]\n")
     
-    return results_from_ocr
+    return results_from_ocr, maid_ref_code_value
 
 ####### PDF to Images Extraction ################
 def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
-    global maidrefcode_list, last_upload_time, maid_status_global
+    global last_upload_time, maid_status_global
 
     # Get the base name of the PDF file to create a subfolder
     base_name = os.path.splitext(os.path.basename(pdf_file))[0]
@@ -768,7 +769,7 @@ def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
     # Close the PDF file
     pdf_document.close()
 
-    # results_from_ocr = summary_generation(total_summary, output_folder, base_name, session_id)
+    results_from_ocr, maid_ref_code = summary_generation(total_summary, output_folder, base_name, session_id)
     results_from_ocr = "test"
 
     # Print the list of page image filenames
@@ -782,7 +783,7 @@ def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
         text_file.write(f"\n[end]{base_name}[/end]\n")
 
     # save_log(os.path.join(output_folder, "logs.txt"),"hello")
-    return page_images
+    return page_images, maid_ref_code
 
 ####### PDF to profile Picture Extraction #######
 
@@ -939,10 +940,9 @@ def index():
 @app.route('/home')
 @login_required
 def home_page():
-    global image_fullpath_with_face_list, maidrefcode_list, new_uploaded_pdf_file_path_list
+    global image_fullpath_with_face_list, new_uploaded_pdf_file_path_list
 
     image_fullpath_with_face_list = []
-    maidrefcode_list = []
     new_uploaded_pdf_file_path_list = []
     # uploaded_pdf_file_path_list = []
 
@@ -1091,12 +1091,13 @@ def upload_ocrfile():
 @app.route('/process/<session_id>', methods=['POST'])
 @login_required
 def process_files(session_id):
-    global image_fullpath_with_face_list, maidrefcode_list, uploaded_pdf_file_list, uploaded_file_list, new_uploaded_pdf_file_path_list
+    global image_fullpath_with_face_list, uploaded_pdf_file_list, uploaded_file_list, new_uploaded_pdf_file_path_list
 
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
     def mock_processing():
         new_pdf_list = []
+        maidrefcode_list = []
         try:
 
             print("uploading process started")
@@ -1148,9 +1149,10 @@ def process_files(session_id):
 
                 process_pdf_extract_image(filename)
                 pdf_path = os.path.join(UPLOAD_FOLDER, filename)
-                pdf_to_jpg(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER, session_id, zoom=2) ## ocr and analyzing
+                page_images, maid_ref_code = pdf_to_jpg(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER, session_id, zoom=2) ## ocr and analyzing
                 index += 1
                 progress[session_id]['current'] = index
+                maidrefcode_list.append(maid_ref_code)
                 
             try:
                 # maidrefcode_list = ['SRANML240075','CML','AA']
