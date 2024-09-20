@@ -841,6 +841,7 @@ def extract_images_with_faces(pdf_path):
             faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
             print(f"Number of faces detected: {len(faces)}")
 
+            ## adjust this parameter if needed
             box_width_percentage=150
             box_height_percentage=150
 
