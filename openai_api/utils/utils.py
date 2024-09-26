@@ -42,7 +42,7 @@ def get_summary_from_text_test(summarized_string):
     # return "Summary could not be generated due to an error."
   
 
-def get_summary_from_text(summarized_string):
+def get_summary_from_text(custom_prompt, summarized_string):
   global LOGPATH
 
 
@@ -51,7 +51,7 @@ def get_summary_from_text(summarized_string):
   response = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements."},
+        {"role": "system", "content": f"You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements. {custom_prompt}"},
         {"role": "user", "content": summarized_string}
     ],
     temperature=0.3,
@@ -81,7 +81,7 @@ def get_summary_from_text(summarized_string):
     # return "Summary could not be generated due to an error."
   
 
-def get_summary_from_text_gpt4omini(summarized_string):
+def get_summary_from_text_gpt4omini(custom_prompt, summarized_string):
   global LOGPATH
 
 
@@ -90,7 +90,7 @@ def get_summary_from_text_gpt4omini(summarized_string):
   response = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-        {"role": "system", "content": "You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements."},
+        {"role": "system", "content": f"You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements. {custom_prompt}"},
         {"role": "user", "content": summarized_string}
     ],
     temperature=0.3,
@@ -121,7 +121,7 @@ def get_summary_from_text_gpt4omini(summarized_string):
     # return "Summary could not be generated due to an error."
   
 
-def get_summary_from_text_gpt4o(summarized_string):
+def get_summary_from_text_gpt4o(custom_prompt, summarized_string):
   global LOGPATH
 
 
@@ -130,7 +130,7 @@ def get_summary_from_text_gpt4o(summarized_string):
   response = client.chat.completions.create(
     model="gpt-3.5-turbo-0125",
     messages=[
-        {"role": "system", "content": "You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements."},
+        {"role": "system", "content": f"You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements.{custom_prompt}"},
         {"role": "user", "content": summarized_string}
     ],
     temperature=0.3,

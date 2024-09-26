@@ -357,7 +357,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
     if custom_prompt not in ["Not Found", "Read Error"]:
 
-        total_summary += custom_prompt + "\n"
+        # total_summary += custom_prompt + "\n"
 
         if current_structured_text == 'gpt35':
 
@@ -371,11 +371,11 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             if word_count <= 2900:
                 print("Sending text to OpenAI  GPT3.5...")
                 save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT3.5...")
-                summary_text = get_summary_from_text(total_summary) ## summary text from gpt3.5
+                summary_text = get_summary_from_text(custom_prompt, total_summary) ## summary text from gpt3.5
             else:
                 save_log(os.path.join(output_folder, "logs.txt"),"Words limit exceeds..switching to GPT4o")
                 save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT4o...")
-                summary_text = get_summary_from_text_gpt4o(total_summary) ## summary text from gpt4o
+                summary_text = get_summary_from_text_gpt4o(custom_prompt, total_summary) ## summary text from gpt4o
         else:  ## gpt4omini
 
             # Count words in the input string
@@ -383,7 +383,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
             print("Sending text to OpenAI  GPT4omini...")
             save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT4omini...")
-            summary_text = get_summary_from_text_gpt4omini(total_summary) ## summary text from gpt4omini
+            summary_text = get_summary_from_text_gpt4omini(custom_prompt, total_summary) ## summary text from gpt4omini
 
         ## test
         # summary_text = get_summary_from_text_test(total_summary)
