@@ -400,7 +400,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
                 summary_dict[key] = value.strip()
 
         ##=========== Special Case Here For Initial Setting of Key Values ================##
-
+        ## maid name
         try:
             maid_name_value = summary_dict.get("maid name", "")
 
@@ -418,7 +418,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             
 
         Is_incorrect_birth_date = "no"
-
+        ## maid ref code
         try:
 
             # Get the maid ref code and birth date value from the dictionary
@@ -587,7 +587,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             # maidrefcode_list.append(maid_ref_code_value)
             summary_dict["maid ref code"] = maid_ref_code_value
 
-
+        ## maid status
         if maid_status_global == "None":
 
             try:
@@ -610,7 +610,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             except Exception as e:
                 print(f"Error occurred: {e}")
 
-
+        ## education
         try:
             education_id_value = summary_dict.get("education", "")
             # - Others
@@ -625,7 +625,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         except Exception as e:
             print(f"Error occurred: {e}")
 
-
+        ## religion
         try:
             religion_id_value = summary_dict.get("religion", "")
             #Buddhist|Catholic|Christian|Free Thinker|Hindu|Muslim|Sikh|Others
@@ -636,6 +636,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         except Exception as e:
             print(f"Error occurred: {e}")
 
+        ## maid preferred rest day
         try:
             maid_preferred_rest_day_id_value = summary_dict.get("maid preferred rest day", "")
             if "all sun" in maid_preferred_rest_day_id_value.strip().lower():
@@ -647,6 +648,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         except Exception as e:
             print(f"Error occurred: {e}")
 
+        ## public maid introduction
         try:
             # Define the marker strings before and after maid introduction
             start_marker = '[public maid introduction]:'
@@ -666,6 +668,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         except Exception as e:
             print(f"Error occurred: {e}")
 
+        ## marital status
         try:
             # Getting the value corresponding to the key "marital status" then stored
             marital_status_option_id_value = summary_dict.get("marital status", "")

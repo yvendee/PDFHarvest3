@@ -30,6 +30,7 @@ def convert_date_format(date_str):
     except ValueError:
         return date_str
 
+
 # Function to replace dates in text
 def replace_dates(text):
     return date_pattern.sub(lambda match: convert_date_format(match.group()), text)
@@ -43,6 +44,19 @@ def convert_date(date_str):
     except ValueError:
         # Return an error message or placeholder if the input is not a valid date
         return "'"
+
+
+## output dates in the format DD/MM/YY without leading zeros for the month,
+## In this version, %-m is used to ensure that the month is displayed without a leading zero.
+
+def convert_date2(date_str):
+    try:
+        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        return f"{date_obj.day}/{date_obj.month}/{date_obj.year % 100:02}"  # Manually format
+    except ValueError:
+        return "'"
+
+    
 
 def save_csv(filename, header, data):
 
@@ -204,8 +218,8 @@ def save_csv(filename, header, data):
     # Apply the date replacement to each text in the list
     processed_data2 = [replace_dates(text) for text in processed_data2]
 
-    ## after the date replacement (not affected), bring back the date of birth with a new format
-    processed_data2[12] = convert_date(new_dateofbirth) # Output: 22/07/76
+    ## after the date replacement , bring back the date of birth with a new format
+    processed_data2[12] = convert_date2(new_dateofbirth) # Output: 22/07/76
 
     # processed_data2[12] = "'" + new_dateofbirth ## the date of birth in your CSV file is treated as text and not automatically formatted as a date in Excel, you should enclose the date values in double quotes and prefix them with an apostrophe ('). This tells Excel to treat the content as text.
 

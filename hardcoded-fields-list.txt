@@ -1,0 +1,8 @@
+maid name
+maid ref code
+maid status
+education
+religion
+maid preferred rest day
+public maid introduction
+marital status
