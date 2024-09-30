@@ -641,10 +641,15 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             maid_preferred_rest_day_id_value = summary_dict.get("maid preferred rest day", "")
             if "all sun" in maid_preferred_rest_day_id_value.strip().lower():
                 summary_dict["maid preferred rest day"] = "4 rest days per month"
-            elif maid_preferred_rest_day_id_value.strip().lower() in ["1 rest days per month", "2 rest days per month", "3 rest days per month", "4 rest days per month"]:
-                summary_dict["maid preferred rest day"] = maid_preferred_rest_day_id_value.strip().lower()
             else:
-                summary_dict["maid preferred rest day"] = "1 rest days per month"
+                print(f"maid preferred rest day: {maid_preferred_rest_day_id_value}")
+                summary_dict["maid preferred rest day"] = maid_preferred_rest_day_id_value
+
+                # valid_rest_days = {"1 rest day per month", "2 rest days per month", "3 rest days per month", "4 rest days per month"}
+                # if maid_preferred_rest_day_id_value.strip().lower() in valid_rest_days:
+                #     summary_dict["maid preferred rest day"] = maid_preferred_rest_day_id_value.strip().lower()
+                # else:
+                #     summary_dict["maid preferred rest day"] = "1 rest day per month"
         except Exception as e:
             print(f"Error occurred: {e}")
 
