@@ -351,6 +351,8 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
     # Initialize summary_dict with lowercase keys based on matches_list
     summary_dict = {match.lower(): "Null" for match in matches_list}
 
+    new_summary_dict = summary_dict
+
     # print(summary_dict)
     
     summary_text = ""
@@ -706,6 +708,9 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
     with open(os.path.join(output_folder, "summary_text_from_gpt.txt"), "a", encoding="utf-8") as text_file:
         text_file.write(f"[start]{base_name}[/start]\n")
+        text_file.write(str(new_summary_dict))
+        text_file.write("-------------------")
+        text_file.write("\n")
         text_file.write(str(summary_dict))
         text_file.write("\n")
         text_file.write(summary_text)
