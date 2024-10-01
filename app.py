@@ -634,7 +634,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             if religion_id_value.strip().lower() in ["buddhist", "catholic", "christian", "free thinker","hindu", "muslim", "sikh"]:
                 summary_dict["religion"] = religion_id_value.strip().lower()
             else:
-                summary_dict["religion id"] = "Others"
+                summary_dict["religion"] = "Others"
         except Exception as e:
             print(f"Error occurred: {e}")
 
