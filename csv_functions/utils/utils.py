@@ -44,6 +44,15 @@ def convert_date(date_str):
         # Return an error message or placeholder if the input is not a valid date
         return "'"
 
+
+## for windows, linux, macos
+def convert_date2(date_str):
+    try:
+        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        return f"{date_obj.day}/{date_obj.month}/{date_obj.year % 100:02}"  # Manually format
+    except ValueError:
+        return "'"
+
 def save_csv(filename, header, data):
 
     # Replace spaces with underscores in headers
@@ -205,7 +214,7 @@ def save_csv(filename, header, data):
     processed_data2 = [replace_dates(text) for text in processed_data2]
 
     ## after the date replacement (not affected), bring back the date of birth with a new format
-    processed_data2[12] = convert_date(new_dateofbirth) # Output: 22/07/76
+    processed_data2[12] = convert_date2(new_dateofbirth) # Output: 22/07/76
 
     # processed_data2[12] = "'" + new_dateofbirth ## the date of birth in your CSV file is treated as text and not automatically formatted as a date in Excel, you should enclose the date values in double quotes and prefix them with an apostrophe ('). This tells Excel to treat the content as text.
 
