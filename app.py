@@ -620,8 +620,13 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             # - High School (11-12 yrs)
             # - Secondary Level (7-10 yrs)
             # - Primary Level (1-6 yrs)
-            if education_id_value.strip().lower() in ["diploma/degree (>=13 yrs)", "high school (11-12 yrs)", "secondary level (7-10 yrs)", "primary level (1-6 yrs)"]:
-                summary_dict["education"] = education_id_value.strip().lower()
+            # if education_id_value.strip().lower() in ["diploma/degree (>=13 yrs)", "high school (11-12 yrs)", "secondary level (7-10 yrs)", "primary level (1-6 yrs)"]:
+            #     summary_dict["education"] = education_id_value.strip().lower()
+            # else:
+            #     summary_dict["education"] = "Others"
+
+            if education_id_value:
+                summary_dict["education"] = education_id_value
             else:
                 summary_dict["education"] = "Others"
         except Exception as e:
@@ -631,10 +636,12 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         try:
             religion_id_value = summary_dict.get("religion", "")
             #Buddhist|Catholic|Christian|Free Thinker|Hindu|Muslim|Sikh|Others
-            if religion_id_value.strip().lower() in ["buddhist", "catholic", "christian", "free thinker","hindu", "muslim", "sikh"]:
-                summary_dict["religion"] = religion_id_value.strip().lower()
+
+            if religion_id_value:
+                summary_dict["religion"] = religion_id_value
             else:
                 summary_dict["religion"] = "Others"
+
         except Exception as e:
             print(f"Error occurred: {e}")
 
@@ -679,11 +686,18 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         try:
             # Getting the value corresponding to the key "marital status" then stored
             marital_status_option_id_value = summary_dict.get("marital status", "")
-            # Single|Married|Widowed|Divorced|Separated
-            if marital_status_option_id_value.strip().lower() in ["single", "married", "widowed", "divorced", "separated"]:
-                summary_dict["marital status"] = marital_status_option_id_value.strip().lower()
+
+            if marital_status_option_id_value:
+                summary_dict["marital status"] = marital_status_option_id_value
+
             else:
                 summary_dict["marital status"] = "single"
+
+            # Single|Married|Widowed|Divorced|Separated
+            # if marital_status_option_id_value.strip().lower() in ["single", "married", "widowed", "divorced", "separated"]:
+            #     summary_dict["marital status"] = marital_status_option_id_value.strip().lower()
+            # else:
+            #     summary_dict["marital status"] = "single"
         except Exception as e:
             print(f"Error occurred: {e}")
 
