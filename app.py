@@ -1218,7 +1218,19 @@ def process_files(session_id):
                         # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
                         converted_pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
                         if converted_pdf_path:
-                            print (f"Success converting a file")
+                            print (f"Success .doc .docx converting a file")
+                            filename = os.path.basename(converted_pdf_path)
+                            new_file_path = copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
+                            new_pdf_list.append(new_file_path)
+                            
+                        else:
+                            print (f"Error converting a file")
+
+                    elif file_ext in ['.xls', '.xlsx']:
+                        # pdf_path = replace_extension_with_pdf(app.config['UPLOAD_FOLDER'], filename)
+                        converted_pdf_path = convert_doctypes_to_pdf(file_path, app.config['UPLOAD_FOLDER'])
+                        if converted_pdf_path:
+                            print (f"Success .xls .xlsx converting a file")
                             filename = os.path.basename(converted_pdf_path)
                             new_file_path = copy_file(converted_pdf_path, EXTRACTED_PROFILE_PICTURE_FOLDER)
                             new_pdf_list.append(new_file_path)
