@@ -613,7 +613,35 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
                 print(f"Error occurred: {e}")
         ##
 
-                ## education
+        # ## education
+        # try:
+        #     # Getting the value corresponding to the key "education"
+        #     education_id_value = summary_dict.get("education", "")
+        #     print(f"Education input: '{education_id_value}'")
+
+        #     # Define valid education options
+        #     valid_education_options = [
+        #         "diploma/degree (>=13 yrs)", 
+        #         "high school (11-12 yrs)", 
+        #         "secondary level (7-10 yrs)", 
+        #         "primary level (1-6 yrs)",
+        #         "others"
+        #     ]
+
+        #     # Clean the value: allow letters, numbers, (), /, -, <>, =
+        #     cleaned_value = re.sub(r'[^a-zA-Z0-9 ()/<>=-]', '', education_id_value.strip().lower())
+        #     print(f"Cleaned education: '{cleaned_value}'")
+
+        #     if cleaned_value in valid_education_options:
+        #         summary_dict["education"] = cleaned_value
+        #     else:
+        #         summary_dict["education"] = "Others"
+
+        # except Exception as e:
+        #     print(f"Error occurred: {e}")
+
+
+        # Education mapping logic
         try:
             # Getting the value corresponding to the key "education"
             education_id_value = summary_dict.get("education", "")
@@ -632,14 +660,19 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             cleaned_value = re.sub(r'[^a-zA-Z0-9 ()/<>=-]', '', education_id_value.strip().lower())
             print(f"Cleaned education: '{cleaned_value}'")
 
-            if cleaned_value in valid_education_options:
+            # Map input values to the desired output
+            if cleaned_value in ["high school (10~12 yrs)", "senior high school"]:
+                summary_dict["education"] = "high school (11-12 yrs)"
+            elif cleaned_value == "junior high school":
+                summary_dict["education"] = "secondary level (7-10 yrs)"
+            elif cleaned_value in valid_education_options:
                 summary_dict["education"] = cleaned_value
             else:
-                summary_dict["education"] = "Others"
+                summary_dict["education"] = "others"
 
         except Exception as e:
             print(f"Error occurred: {e}")
-            
+
         ## religion
         try:
             # Getting the value corresponding to the key "religion"
