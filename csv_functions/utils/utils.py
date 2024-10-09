@@ -396,9 +396,9 @@ def save_csv(filename, header, data):
             34: "No", 
             35: "No", 
             36: "No",  ## "illness_operations"
-            40: "No",  ## "handle_pork"
-            41: "No",  ## "handle_beef"
-            42: "No",  ## "handle_pets"
+            40: "Yes",  ## "handle_pork"
+            41: "Yes",  ## "handle_beef"
+            42: "Yes",  ## "handle_pets"
             46: "No",  ## "eval_no_agency_no_trainingctr"
             51: "No",  ## "eval_agency_in_person_observation"
             53: "No",  ## "eval_agency_willing_infant_child"
