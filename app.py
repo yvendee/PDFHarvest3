@@ -331,7 +331,7 @@ def rename_files2(pdf_file_list, maid_refcode_list):  ## rename input pdf's with
 
 
 def summary_generation(total_summary, output_folder, base_name, session_id):
-
+    global maid_status_global
     results_from_ocr = total_summary
     maid_ref_code_value = ""
 
@@ -815,7 +815,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
 ####### PDF to Images Extraction ################
 def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
-    global last_upload_time, maid_status_global
+    global last_upload_time
 
     # Get the base name of the PDF file to create a subfolder
     base_name = os.path.splitext(os.path.basename(pdf_file))[0]
@@ -1324,7 +1324,7 @@ def process_files(session_id):
 @app.route('/extracting/<session_id>', methods=['POST'])
 @login_required
 def extract_ocrfile(session_id):
-    global last_upload_time, maid_status_global
+    global last_upload_time
 
     if not check_authenticated():
         return jsonify({'error': 'Unauthorized access'}), 401
