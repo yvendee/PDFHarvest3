@@ -266,7 +266,8 @@ def rename_files(image_fullpath_with_face_list, maid_refcode_list): ## rename ex
         for i in range(len(image_fullpath_with_face_list)):
 
             if(image_fullpath_with_face_list[i] == "no-picture-found"):
-                print("no picture found!")
+                # print("no picture found!")
+                print(f"{maid_refcode_list[i]} ---> no picture found")
             else:
             #     print("with picture found!")
             
@@ -288,12 +289,15 @@ def rename_files(image_fullpath_with_face_list, maid_refcode_list): ## rename ex
                         # Rename the file
                         os.rename(original_path, new_fullpath)
 
+                        print(f"renaming : {maidrefcode} ---> {original_path}  to  {new_fullpath}: success")
+
                         # Update image_fullpath_with_face_list with new path
                         image_fullpath_with_face_list[i] = new_fullpath
 
                     except OSError as e:
                         print(f"Error renaming {original_path} to {new_fullpath}: {e}")
     except:
+        print(f"Error during starting the renaming process")
         pass
 
     # Return the updated image_fullpath_with_face_list
@@ -301,6 +305,7 @@ def rename_files(image_fullpath_with_face_list, maid_refcode_list): ## rename ex
 
 def rename_files2(pdf_file_list, maid_refcode_list):  ## rename input pdf's with maid ref code
     # Iterate through both lists simultaneously
+    print("***[start] renaming pdf with maid ref code***")
     for i in range(len(pdf_file_list)):
         original_path = pdf_file_list[i]
         maidrefcode = maid_refcode_list[i]
@@ -319,13 +324,16 @@ def rename_files2(pdf_file_list, maid_refcode_list):  ## rename input pdf's with
             try:
                 # Rename the file
                 os.rename(original_path, new_fullpath)
+                print(f"renaming : {maidrefcode} ---> {original_path}  to  {new_fullpath}: success")
+
 
                 # Update pdf_file_list with new path
                 pdf_file_list[i] = new_fullpath
 
             except OSError as e:
                 print(f"Error renaming {original_path} to {new_fullpath}: {e}")
-
+                
+    print("***[done] renaming pdf with maid ref code***")
     # Return the updated pdf_file_list
     return pdf_file_list
 
@@ -955,6 +963,8 @@ def extract_images_with_faces(pdf_path):
 
             if page_width > img_width and page_height > img_height:
                 print("Page size is larger than the extracted image size.")
+
+            ## The image size is more than triple the size of the page size.
             if img_width > 3 * page_width and img_height > 3 * page_height:
                 print("The image size is more than triple the size of the page size.")
 
@@ -1024,11 +1034,10 @@ def extract_images_with_faces(pdf_path):
                         print("Height cannot be zero.")
 
                     # break  # Stop processing further images on the first page once a face is found
-
-
         print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
 
         if not face_found:
+            print(f"Processed {pdf_path} --> no-picture-found")
             image_fullpath_with_face_list.append("no-picture-found")
 
     except Exception as e:
