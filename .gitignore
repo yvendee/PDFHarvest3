@@ -7,3 +7,6 @@
 
 # Ignore virtual environment folder
 env/
+
+
+test.py
