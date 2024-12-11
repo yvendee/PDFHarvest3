@@ -669,9 +669,11 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             print(f"Cleaned education: '{cleaned_value}'")
 
             # Map input values to the desired output
-            if cleaned_value in ["high school (10~12 yrs)","highschool(10~12yrs)","highschool (10~12yrs)","senior high school"]:
+            if cleaned_value in ["high school (10~12 yrs)","highschool(10~12yrs)","highschool (10~12yrs)","highschool (10~12 yrs)","senior high school","high school (11-12yrs)","highschool (11-12yrs)","highschool (11-12 yrs)"]:
                 summary_dict["education"] = "high school (11-12 yrs)"
-            elif cleaned_value == "junior high school":
+            # elif cleaned_value == "junior high school":
+            #     summary_dict["education"] = "secondary level (7-10 yrs)"
+            elif cleaned_value in ["junior high school","secondary level (7-10yrs)","secondarylevel (7-10 yrs)","secondarylevel (7-10yrs)"]:
                 summary_dict["education"] = "secondary level (7-10 yrs)"
             elif cleaned_value in valid_education_options:
                 summary_dict["education"] = cleaned_value

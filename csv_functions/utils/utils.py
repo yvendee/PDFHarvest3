@@ -202,8 +202,16 @@ def save_csv(filename, header, data):
             processed_words.append(word.lower().capitalize())
         return ' '.join(processed_words)
 
-    # Function to extract numeric value from a string or float
+
     def extract_numeric(data):
+        # Regex pattern to extract the initial numeric value before any non-numeric characters
+        match = re.match(r'(\d+\.\d+|\d+)', data)
+        if match:
+            return match.group()
+        return ""  # or handle the case when no match is found
+
+    # Function to extract numeric value from a string or float
+    def extract_numeric2(data):
         if isinstance(data, str):  # Check if input is a string
             match = re.match(r'(\d+\.\d+|\d+)', data)
             if match:
@@ -216,7 +224,7 @@ def save_csv(filename, header, data):
     # Function to process the extracted numeric value and round if valid
     def process_extracted_numeric(data):
         # First, extract the numeric value
-        extracted_value = extract_numeric(data)
+        extracted_value = extract_numeric2(data)
         
         # Only apply round if it's a valid numeric value (not an empty string)
         if extracted_value != "":
