@@ -3,7 +3,6 @@ import re
 import codecs
 import csv
 from datetime import datetime
-import math
 
 
 # Define accepted characters as a regular expression pattern
@@ -209,7 +208,7 @@ def save_csv(filename, header, data):
     def extract_numeric(data):
         match = re.match(r'(\d+\.\d+|\d+)', data)
         if match:
-            return float(match.group())  # Convert to float for proper math.ceiling
+            return float(match.group())  # Convert to float for proper rounding
         return 0.0  # Return a default numeric value if no match is found
 
     # Process each item in data list
@@ -241,27 +240,27 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_english_stars"
         if len(processed_data2) > 6:
             # processed_data2[6] = extract_numeric(processed_data2[6] )
-            processed_data2[6] = math.ceil(extract_numeric(processed_data2[6]))
+            processed_data2[6] = round(extract_numeric(processed_data2[6]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_mandarin_stars"
         if len(processed_data2) > 7:
             # processed_data2[7] = extract_numeric(processed_data2[7] )
-            processed_data2[7] = math.ceil(extract_numeric(processed_data2[7]))
+            processed_data2[7] = round(extract_numeric(processed_data2[7]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_malay_stars"
         if len(processed_data2) > 8:
             # processed_data2[8] = extract_numeric(processed_data2[8] )
-            processed_data2[8] = math.ceil(extract_numeric(processed_data2[8]))
+            processed_data2[8] = round(extract_numeric(processed_data2[8]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_tamil_stars"
         if len(processed_data2) > 9:
             processed_data2[9] = extract_numeric(processed_data2[9] )
-            processed_data2[9] = math.ceil(extract_numeric(processed_data2[9]))
+            processed_data2[9] = round(extract_numeric(processed_data2[9]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_hindi_stars"
         if len(processed_data2) > 10:
             # processed_data2[10] = extract_numeric(processed_data2[10] )
-            processed_data2[10] = math.ceil(extract_numeric(processed_data2[10]))
+            processed_data2[10] = round(extract_numeric(processed_data2[10]))
 
         # Special Case: Function to extract numeric characters from a string for "height_cm"
         if len(processed_data2) > 14:
@@ -290,7 +289,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_infant_child"
         if len(processed_data2) > 55:
             # processed_data2[55] = extract_numeric(processed_data2[55] )
-            processed_data2[55] = math.ceil(extract_numeric(processed_data2[55]))
+            processed_data2[55] = round(extract_numeric(processed_data2[55]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_elderly"
         if len(processed_data2) > 58:
@@ -299,7 +298,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_elderly"
         if len(processed_data2) > 59:
             # processed_data2[59] = extract_numeric(processed_data2[59] )
-            processed_data2[59] = math.ceil(extract_numeric(processed_data2[59]))
+            processed_data2[59] = round(extract_numeric(processed_data2[59]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_disabled"
         if len(processed_data2) > 62:
@@ -308,7 +307,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_disabled"
         if len(processed_data2) > 63:
             processed_data2[63] = extract_numeric(processed_data2[63] )
-            processed_data2[63] = math.ceil(extract_numeric(processed_data2[63]))
+            processed_data2[63] = round(extract_numeric(processed_data2[63]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_housework"
         if len(processed_data2) > 66:
@@ -317,7 +316,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_housework"
         if len(processed_data2) > 67:
             # processed_data2[67] = extract_numeric(processed_data2[67] )
-            processed_data2[67] = math.ceil(extract_numeric(processed_data2[67]))
+            processed_data2[67] = round(extract_numeric(processed_data2[67]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_cooking"
         if len(processed_data2) > 71:
@@ -326,7 +325,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_cooking"
         if len(processed_data2) > 72:
             # processed_data2[72] = extract_numeric(processed_data2[72] )
-            processed_data2[72] = math.ceil(extract_numeric(processed_data2[72]))
+            processed_data2[72] = round(extract_numeric(processed_data2[72]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_language"
         if len(processed_data2) > 76:
@@ -335,7 +334,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_language"
         if len(processed_data2) > 77:
             # processed_data2[77] = extract_numeric(processed_data2[77] )
-            processed_data2[77] = math.ceil(extract_numeric(processed_data2[77]))
+            processed_data2[77] = round(extract_numeric(processed_data2[77]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_other_skills"
         if len(processed_data2) > 81:
@@ -344,7 +343,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_other_skills"
         if len(processed_data2) > 82:
             # processed_data2[82] = extract_numeric(processed_data2[82] )
-            processed_data2[82] = math.ceil(extract_numeric(processed_data2[82]))
+            processed_data2[82] = round(extract_numeric(processed_data2[82]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_infant_child"
         if len(processed_data2) > 92:
@@ -353,7 +352,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_infant_child"
         if len(processed_data2) > 93:
             # processed_data2[93] = extract_numeric(processed_data2[93] )
-            processed_data2[93] = math.ceil(extract_numeric(processed_data2[93]))
+            processed_data2[93] = round(extract_numeric(processed_data2[93]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_elderly"
         if len(processed_data2) > 96:
@@ -362,7 +361,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_elderly"
         if len(processed_data2) > 97:
             # processed_data2[97] = extract_numeric(processed_data2[97] )
-            processed_data2[97] = math.ceil(extract_numeric(processed_data2[97]))
+            processed_data2[97] = round(extract_numeric(processed_data2[97]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_disabled"
         if len(processed_data2) > 100:
@@ -371,7 +370,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_disabled"
         if len(processed_data2) > 101:
             # processed_data2[101] = extract_numeric(processed_data2[101] )
-            processed_data2[101] = math.ceil(extract_numeric(processed_data2[101]))
+            processed_data2[101] = round(extract_numeric(processed_data2[101]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_housework"
         if len(processed_data2) > 104:
@@ -380,7 +379,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_housework"
         if len(processed_data2) > 105:
             # processed_data2[105] = extract_numeric(processed_data2[105] )
-            processed_data2[105] = math.ceil(extract_numeric(processed_data2[105]))
+            processed_data2[105] = round(extract_numeric(processed_data2[105]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_cooking"
         if len(processed_data2) > 109:
@@ -389,7 +388,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_cooking"
         if len(processed_data2) > 110:
             # processed_data2[110] = extract_numeric(processed_data2[110] )
-            processed_data2[110] = math.ceil(extract_numeric(processed_data2[110]))
+            processed_data2[110] = round(extract_numeric(processed_data2[110]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_language"
         if len(processed_data2) > 114:
@@ -398,7 +397,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_language"
         if len(processed_data2) > 115:
             # processed_data2[115] = extract_numeric(processed_data2[115] )
-            processed_data2[115] = math.ceil(extract_numeric(processed_data2[115]))
+            processed_data2[115] = round(extract_numeric(processed_data2[115]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_other_skills"
         if len(processed_data2) > 120:
@@ -407,7 +406,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_other_skills"
         if len(processed_data2) > 121:
             # processed_data2[121] = extract_numeric(processed_data2[121] )
-            processed_data2[121] = math.ceil(extract_numeric(processed_data2[121]))
+            processed_data2[121] = round(extract_numeric(processed_data2[121]))
 
 
         # Indices and default values to check for empty string and replace with "No"
@@ -592,18 +591,20 @@ def save_csv(filename, header, data):
 
 # # # Example usage:
 # filename = 'example.csv'
-# # header = ['Column 1', 'Column 2', 'Column 3']
-# # data = ['$456â‰0%abA', "hello", 'Secondary level (8~9 Yrs)', 'null']
+# # # header = ['Column 1', 'Column 2', 'Column 3']
+# # # data = ['$456â‰0%abA', "hello", 'Secondary level (8~9 Yrs)', 'null']
 
 # header = ["maid_name","maid_ref_code","maid_type","maid_expected_salary","availability_status","youtube_link","evalsg_lang_english_stars","evalsg_lang_mandarin_stars","evalsg_lang_malay_stars","evalsg_lang_tamil_stars","evalsg_lang_hindi_stars","public_maid_introduction","date_of_birth","place_of_birth","height_cm","weight_kg","nationality","sub_nationality","home_address","home_airport_repatriate","home_contact_number","religion","education","siblings_count","marital_status","children_count","children_ages","allergies","illness_mental","illness_epilepsy","illness_asthma","illness_diabetes","illness_hypertension","illness_tuberculosis","illness_heart_disease","illness_malaria","illness_operations","illness_others","physical_disabilities","dietary_restrictions","handle_pork","handle_beef","handle_pets","handle_others","maid_preferred_rest_day","maid_other_remarks","eval_no_agency_no_trainingctr","eval_agency","eval_agency_telephone","eval_agency_videoconference","eval_agency_in_person","eval_agency_in_person_observation","eval_agency_age_range_infant_child","eval_agency_willing_infant_child","eval_agency_years_infant_child","eval_agency_stars_infant_child","eval_agency_comments_infant_child","eval_agency_willing_elderly","eval_agency_years_elderly","eval_agency_stars_elderly","eval_agency_comments_elderly","eval_agency_willing_disabled","eval_agency_years_disabled","eval_agency_stars_disabled","eval_agency_comments_disabled","eval_agency_willing_housework","eval_agency_years_housework","eval_agency_stars_housework","eval_agency_comments_housework","eval_agency_specify_cuisines_cooking","eval_agency_willing_cooking","eval_agency_years_cooking","eval_agency_stars_cooking","eval_agency_comments_cooking","eval_agency_language","eval_agency_willing_language","eval_agency_years_language","eval_agency_stars_language","eval_agency_comments_language","eval_agency_specify_other_skills","eval_agency_willing_other_skills","eval_agency_years_other_skills","eval_agency_stars_other_skills","eval_agency_comments_other_skills","trainingctr_name","trainingctr_certified","eval_trainingctr_telephone","eval_trainingctr_videoconference","eval_trainingctr_in_person","eval_trainingctr_in_person_observation","eval_trainingctr_age_range_infant_child","eval_trainingctr_willing_infant_child","eval_trainingctr_years_infant_child","eval_trainingctr_stars_infant_child","eval_trainingctr_comments_infant_child","eval_trainingctr_willing_elderly","eval_trainingctr_years_elderly","eval_trainingctr_stars_elderly","eval_trainingctr_comments_elderly","eval_trainingctr_willing_disabled","eval_trainingctr_years_disabled","eval_trainingctr_stars_disabled","eval_trainingctr_comments_disabled","eval_trainingctr_willing_housework","eval_trainingctr_years_housework","eval_trainingctr_stars_housework","eval_trainingctr_comments_housework","eval_trainingctr_specify_cuisines_cooking","eval_trainingctr_willing_cooking","eval_trainingctr_years_cooking","eval_trainingctr_stars_cooking","eval_trainingctr_comments_cooking","eval_trainingctr_language","eval_trainingctr_willing_language","eval_trainingctr_years_language","eval_trainingctr_stars_language","eval_trainingctr_comments_language","eval_trainingctr_specify_other_skills","eval_trainingctr_willing_other_skills","eval_trainingctr_years_other_skills","eval_trainingctr_stars_other_skills","eval_trainingctr_comments_other_skills","employment_history","employer1_date_from","employer1_date_to","employer1_country","employer1_name","employer1_work_duties","employer1_remarks","employer2_date_from","employer2_date_to","employer2_country","employer2_name","employer2_work_duties","employer2_remarks","employer3_date_from","employer3_date_to","employer3_country","employer3_name","employer3_work_duties","employer3_remarks","employer4_date_from","employer4_date_to","employer4_country","employer4_name","employer4_work_duties","employer4_remarks","employer5_date_from","employer5_date_to","employer5_country","employer5_name","employer5_work_duties","employer5_remarks","employer6_date_from","employer6_date_to","employer6_country","employer6_name","employer6_work_duties","employer6_remarks","employer7_date_from","employer7_date_to","employer7_country","employer7_name","employer7_work_duties","employer7_remarks","employer8_date_from","employer8_date_to","employer8_country","employer8_name","employer8_work_duties","employer8_remarks","prev_work_in_sg","maid_prev_feedback1","maid_prev_feedback2","avail_interview_not_available","avail_interview_phone","avail_interview_videoconference","avail_interview_in_person","other_remarks","maid_passport_no","trainingctr_maid_introduction","internal_notes",""]
 # data = ["Nur Arisa","DS0318","Ex-sg Maid","","Other","","3yeasrs",
 # "3years","9years","9years","9years",
 # "She Has Experience As A Housemaid In Singapore For 10 Years. She Is Good At Taking Care Of Children And Elderly. She Is Good Patient And Obedient Girl. She Can Speak Good English And Mandarin Also Can Cook Chinese Food. She Is Highly Recommended To Work In Singapore With Family Who Have New Born Baby Children And Elderly.","04/03/1987","Banyuwangi / East Java","161cm","89lbs","Indonesian","","Dusun Sumbersuko Rt. 001/002 Desa Kesilir Kec. Siliragung Kab. Banyuwangi East Java","Jakarta","62","Muslim",
-# "High School (11-12 yrs)","6siblings","Married","1","11 Y.o-boy","Nil","","Yes","No","No","No","No","No","No","No","No","Nil","Nil","Yes","Yes","Yes","","1 Rest Days Per Month","","","Overseas Training Centre/ea","No","No","No","Yes","NBB-BOY","Yes","4","3","","Yes","4","4","","Yes","","3","","Yes","10","4","","Soup Fried Vegetables Porridge Steam Fish Etc.","Yes","10","3","","English","Yes","10","3","English Is Good With 10 Years Of Experience.","Handle Pets","Yes","2","3","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","- Date: Sep 2020 - Feb 2024","Sep-20","Feb-24","Singapore","Mr Muhamad Fadil","Cleaning House Making Bed Washing & Ironing Cooking Serve Meal Take Care Ahma 83 Y.o-stroke.","Finish Contract","Jul-20","Sep-20","Singapore","Mr Patrick","Cleaning House Making Bed Washing & Ironing Cooking Serve Meal Take Care Baby 4 Months-boy","2 Months/ Er Back To Vietnam","Dec-19","Jul-20","Singapore","Ms Ling"," Cleaning House Making Bed Washing & Cooking Take Care Akong 89 Y.o-stroke.","7 Months/ Er Pass Away","Mar-15","Feb-19","Singapore","Mr Lee Lay Peng","Cleaning House Making Bed Washing & Ironing Cooking Take Care Nbb-boy.","Finish Contract","Mar-10","Feb-12","Singapore","Mr Wong Sing Kuew","Cleaning House Making Bed Washing & Ironing Cooking Handling 2 Dogs.","Finish Contract","","","","","","","","","","","","","","","","","","","Yes","Wong Sing Kuwe Mr","Lee Lay Peng Ms","","X","X","X","I Have Gone Through The Biodata Of This Fdw And Confirm That I Would Like To Employ Her.","",""]
+# "High School (11-12 yrs)","6siblings","Married","1","11 Y.o-boy","Nil","","Yes","No","No","No","No","No","No","No","No","Nil","Nil","Yes","Yes","Yes","","1 Rest Days Per Month","","","Overseas Training Centre/ea","No","No","No","Yes","NBB-BOY","Yes","4","3","","Yes","4","4","","Yes","","3","","Yes","10","4","","Soup Fried Vegetables Porridge Steam Fish Etc.","Yes","10","3.4","","English","Yes","10","3.5","English Is Good With 10 Years Of Experience.","Handle Pets","Yes","2","3.5","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","- Date: Sep 2020 - Feb 2024","Sep-20","Feb-24","Singapore","Mr Muhamad Fadil","Cleaning House Making Bed Washing & Ironing Cooking Serve Meal Take Care Ahma 83 Y.o-stroke.","Finish Contract","Jul-20","Sep-20","Singapore","Mr Patrick","Cleaning House Making Bed Washing & Ironing Cooking Serve Meal Take Care Baby 4 Months-boy","2 Months/ Er Back To Vietnam","Dec-19","Jul-20","Singapore","Ms Ling"," Cleaning House Making Bed Washing & Cooking Take Care Akong 89 Y.o-stroke.","7 Months/ Er Pass Away","Mar-15","Feb-19","Singapore","Mr Lee Lay Peng","Cleaning House Making Bed Washing & Ironing Cooking Take Care Nbb-boy.","Finish Contract","Mar-10","Feb-12","Singapore","Mr Wong Sing Kuew","Cleaning House Making Bed Washing & Ironing Cooking Handling 2 Dogs.","Finish Contract","","","","","","","","","","","","","","","","","","","Yes","Wong Sing Kuwe Mr","Lee Lay Peng Ms","","X","X","X","I Have Gone Through The Biodata Of This Fdw And Confirm That I Would Like To Employ Her.","",""]
 
+
+    
 # print(header[3])
 # print(data[3])
-# # print(header[174])
-# # print(data[174])
-# # save_csv(filename, header, data)
+# print(header[72])
+# print(extract_numeric(data[72]))
+# save_csv(filename, header, data)
 # print("Done")
