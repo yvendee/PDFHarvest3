@@ -3,6 +3,7 @@ import re
 import codecs
 import csv
 from datetime import datetime
+import math
 
 
 # Define accepted characters as a regular expression pattern
@@ -208,7 +209,7 @@ def save_csv(filename, header, data):
     def extract_numeric(data):
         match = re.match(r'(\d+\.\d+|\d+)', data)
         if match:
-            return float(match.group())  # Convert to float for proper rounding
+            return float(match.group())  # Convert to float for proper math.ceiling
         return 0.0  # Return a default numeric value if no match is found
 
     # Process each item in data list
@@ -240,27 +241,27 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_english_stars"
         if len(processed_data2) > 6:
             # processed_data2[6] = extract_numeric(processed_data2[6] )
-            processed_data2[6] = round(extract_numeric(processed_data2[6]))
+            processed_data2[6] = math.ceil(extract_numeric(processed_data2[6]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_mandarin_stars"
         if len(processed_data2) > 7:
             # processed_data2[7] = extract_numeric(processed_data2[7] )
-            processed_data2[7] = round(extract_numeric(processed_data2[7]))
+            processed_data2[7] = math.ceil(extract_numeric(processed_data2[7]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_malay_stars"
         if len(processed_data2) > 8:
             # processed_data2[8] = extract_numeric(processed_data2[8] )
-            processed_data2[8] = round(extract_numeric(processed_data2[8]))
+            processed_data2[8] = math.ceil(extract_numeric(processed_data2[8]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_tamil_stars"
         if len(processed_data2) > 9:
             processed_data2[9] = extract_numeric(processed_data2[9] )
-            processed_data2[9] = round(extract_numeric(processed_data2[9]))
+            processed_data2[9] = math.ceil(extract_numeric(processed_data2[9]))
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_hindi_stars"
         if len(processed_data2) > 10:
             # processed_data2[10] = extract_numeric(processed_data2[10] )
-            processed_data2[10] = round(extract_numeric(processed_data2[10]))
+            processed_data2[10] = math.ceil(extract_numeric(processed_data2[10]))
 
         # Special Case: Function to extract numeric characters from a string for "height_cm"
         if len(processed_data2) > 14:
@@ -289,7 +290,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_infant_child"
         if len(processed_data2) > 55:
             # processed_data2[55] = extract_numeric(processed_data2[55] )
-            processed_data2[55] = round(extract_numeric(processed_data2[55]))
+            processed_data2[55] = math.ceil(extract_numeric(processed_data2[55]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_elderly"
         if len(processed_data2) > 58:
@@ -298,7 +299,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_elderly"
         if len(processed_data2) > 59:
             # processed_data2[59] = extract_numeric(processed_data2[59] )
-            processed_data2[59] = round(extract_numeric(processed_data2[59]))
+            processed_data2[59] = math.ceil(extract_numeric(processed_data2[59]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_disabled"
         if len(processed_data2) > 62:
@@ -307,7 +308,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_disabled"
         if len(processed_data2) > 63:
             processed_data2[63] = extract_numeric(processed_data2[63] )
-            processed_data2[63] = round(extract_numeric(processed_data2[63]))
+            processed_data2[63] = math.ceil(extract_numeric(processed_data2[63]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_housework"
         if len(processed_data2) > 66:
@@ -316,7 +317,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_housework"
         if len(processed_data2) > 67:
             # processed_data2[67] = extract_numeric(processed_data2[67] )
-            processed_data2[67] = round(extract_numeric(processed_data2[67]))
+            processed_data2[67] = math.ceil(extract_numeric(processed_data2[67]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_cooking"
         if len(processed_data2) > 71:
@@ -325,7 +326,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_cooking"
         if len(processed_data2) > 72:
             # processed_data2[72] = extract_numeric(processed_data2[72] )
-            processed_data2[72] = round(extract_numeric(processed_data2[72]))
+            processed_data2[72] = math.ceil(extract_numeric(processed_data2[72]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_language"
         if len(processed_data2) > 76:
@@ -334,7 +335,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_language"
         if len(processed_data2) > 77:
             # processed_data2[77] = extract_numeric(processed_data2[77] )
-            processed_data2[77] = round(extract_numeric(processed_data2[77]))
+            processed_data2[77] = math.ceil(extract_numeric(processed_data2[77]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_other_skills"
         if len(processed_data2) > 81:
@@ -343,7 +344,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_other_skills"
         if len(processed_data2) > 82:
             # processed_data2[82] = extract_numeric(processed_data2[82] )
-            processed_data2[82] = round(extract_numeric(processed_data2[82]))
+            processed_data2[82] = math.ceil(extract_numeric(processed_data2[82]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_infant_child"
         if len(processed_data2) > 92:
@@ -352,7 +353,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_infant_child"
         if len(processed_data2) > 93:
             # processed_data2[93] = extract_numeric(processed_data2[93] )
-            processed_data2[93] = round(extract_numeric(processed_data2[93]))
+            processed_data2[93] = math.ceil(extract_numeric(processed_data2[93]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_elderly"
         if len(processed_data2) > 96:
@@ -361,7 +362,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_elderly"
         if len(processed_data2) > 97:
             # processed_data2[97] = extract_numeric(processed_data2[97] )
-            processed_data2[97] = round(extract_numeric(processed_data2[97]))
+            processed_data2[97] = math.ceil(extract_numeric(processed_data2[97]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_disabled"
         if len(processed_data2) > 100:
@@ -370,7 +371,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_disabled"
         if len(processed_data2) > 101:
             # processed_data2[101] = extract_numeric(processed_data2[101] )
-            processed_data2[101] = round(extract_numeric(processed_data2[101]))
+            processed_data2[101] = math.ceil(extract_numeric(processed_data2[101]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_housework"
         if len(processed_data2) > 104:
@@ -379,7 +380,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_housework"
         if len(processed_data2) > 105:
             # processed_data2[105] = extract_numeric(processed_data2[105] )
-            processed_data2[105] = round(extract_numeric(processed_data2[105]))
+            processed_data2[105] = math.ceil(extract_numeric(processed_data2[105]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_cooking"
         if len(processed_data2) > 109:
@@ -388,7 +389,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_cooking"
         if len(processed_data2) > 110:
             # processed_data2[110] = extract_numeric(processed_data2[110] )
-            processed_data2[110] = round(extract_numeric(processed_data2[110]))
+            processed_data2[110] = math.ceil(extract_numeric(processed_data2[110]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_language"
         if len(processed_data2) > 114:
@@ -397,7 +398,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_language"
         if len(processed_data2) > 115:
             # processed_data2[115] = extract_numeric(processed_data2[115] )
-            processed_data2[115] = round(extract_numeric(processed_data2[115]))
+            processed_data2[115] = math.ceil(extract_numeric(processed_data2[115]))
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_other_skills"
         if len(processed_data2) > 120:
@@ -406,7 +407,7 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_other_skills"
         if len(processed_data2) > 121:
             # processed_data2[121] = extract_numeric(processed_data2[121] )
-            processed_data2[121] = round(extract_numeric(processed_data2[121]))
+            processed_data2[121] = math.ceil(extract_numeric(processed_data2[121]))
 
 
         # Indices and default values to check for empty string and replace with "No"
