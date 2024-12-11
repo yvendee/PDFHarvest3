@@ -202,22 +202,27 @@ def save_csv(filename, header, data):
             processed_words.append(word.lower().capitalize())
         return ' '.join(processed_words)
 
-    # def extract_numeric(data):
-    #     # Regex pattern to extract the initial numeric value before any non-numeric characters
-    #     match = re.match(r'(\d+\.\d+|\d+)', data)
-    #     if match:
-    #         return match.group()
-    #     return ""  # or handle the case when no match is found
-
     # Function to extract numeric value from a string or float
     def extract_numeric(data):
         if isinstance(data, str):  # Check if input is a string
             match = re.match(r'(\d+\.\d+|\d+)', data)
             if match:
-                return float(match.group())  # Convert to float
+                return float(match.group())  # Convert to float if match found
         elif isinstance(data, (int, float)):  # If input is already numeric
             return float(data)  # Just return the float value
-        return 0.0  # Return a default numeric value if no match is found
+        return ""  # Return empty string if no match is found
+
+
+    # Function to process the extracted numeric value and round if valid
+    def process_extracted_numeric(data):
+        # First, extract the numeric value
+        extracted_value = extract_numeric(data)
+        
+        # Only apply round if it's a valid numeric value (not an empty string)
+        if extracted_value != "":
+            return round(extracted_value)
+        else:
+            return ""  # Return an empty string if no valid numeric value is found
 
     # Process each item in data list
     processed_data2 = [process_data_item2(item) for item in processed_data]
@@ -249,27 +254,28 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_english_stars"
         if len(processed_data2) > 6:
             # processed_data2[6] = extract_numeric(processed_data2[6] )
-            processed_data2[6] = round(extract_numeric(processed_data2[6]))
+            processed_data2[6] = process_extracted_numeric(processed_data2[6])
+            
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_mandarin_stars"
         if len(processed_data2) > 7:
             # processed_data2[7] = extract_numeric(processed_data2[7] )
-            processed_data2[7] = round(extract_numeric(processed_data2[7]))
+            processed_data2[7] = process_extracted_numeric(processed_data2[7])
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_malay_stars"
         if len(processed_data2) > 8:
             # processed_data2[8] = extract_numeric(processed_data2[8] )
-            processed_data2[8] = round(extract_numeric(processed_data2[8]))
+            processed_data2[8] = process_extracted_numeric(processed_data2[8])
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_tamil_stars"
         if len(processed_data2) > 9:
-            processed_data2[9] = extract_numeric(processed_data2[9] )
-            processed_data2[9] = round(extract_numeric(processed_data2[9]))
+            processed_data2[9] = process_extracted_numeric(processed_data2[9] )
+
 
         # Special Case: Function to extract numeric characters from a string for "evalsg_lang_hindi_stars"
         if len(processed_data2) > 10:
             # processed_data2[10] = extract_numeric(processed_data2[10] )
-            processed_data2[10] = round(extract_numeric(processed_data2[10]))
+            processed_data2[10] = process_extracted_numeric(processed_data2[10])
 
         # Special Case: Function to extract numeric characters from a string for "height_cm"
         if len(processed_data2) > 14:
@@ -289,135 +295,134 @@ def save_csv(filename, header, data):
 
         # Special Case: Function to extract numeric characters from a string for "children_count"
         if len(processed_data2) > 25:
-            processed_data2[25] = extract_numeric(processed_data2[25] )
+            processed_data2[25] = process_extracted_numeric(processed_data2[25] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_infant_child"
         if len(processed_data2) > 54:
-            processed_data2[54] = extract_numeric(processed_data2[54] )
+            processed_data2[54] = process_extracted_numeric(processed_data2[54] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_infant_child"
         if len(processed_data2) > 55:
             # processed_data2[55] = extract_numeric(processed_data2[55] )
-            processed_data2[55] = round(extract_numeric(processed_data2[55]))
+            processed_data2[55] = process_extracted_numeric(processed_data2[55])
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_elderly"
         if len(processed_data2) > 58:
-            processed_data2[58] = extract_numeric(processed_data2[58] )
+            processed_data2[58] = process_extracted_numeric(processed_data2[58] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_elderly"
         if len(processed_data2) > 59:
             # processed_data2[59] = extract_numeric(processed_data2[59] )
-            processed_data2[59] = round(extract_numeric(processed_data2[59]))
+            processed_data2[59] = process_extracted_numeric(processed_data2[59])
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_disabled"
         if len(processed_data2) > 62:
-            processed_data2[62] = extract_numeric(processed_data2[62] )
+            processed_data2[62] = process_extracted_numeric(processed_data2[62] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_disabled"
         if len(processed_data2) > 63:
-            processed_data2[63] = extract_numeric(processed_data2[63] )
-            processed_data2[63] = round(extract_numeric(processed_data2[63]))
+            # processed_data2[63] = extract_numeric(processed_data2[63] )
+            processed_data2[63] = process_extracted_numeric(processed_data2[63])
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_housework"
         if len(processed_data2) > 66:
-            processed_data2[66] = extract_numeric(processed_data2[66] )
+            processed_data2[66] = process_extracted_numeric(processed_data2[66] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_housework"
         if len(processed_data2) > 67:
             # processed_data2[67] = extract_numeric(processed_data2[67] )
-            processed_data2[67] = round(extract_numeric(processed_data2[67]))
+            processed_data2[67] = process_extracted_numeric(processed_data2[67])
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_cooking"
         if len(processed_data2) > 71:
-            processed_data2[71] = extract_numeric(processed_data2[71] )
+            processed_data2[71] = process_extracted_numeric(processed_data2[71] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_cooking"
         if len(processed_data2) > 72:
             # processed_data2[72] = extract_numeric(processed_data2[72] )
-            print(processed_data2[72])
-            processed_data2[72] = round(extract_numeric(processed_data2[72]))
-            print(processed_data2[72])
+            processed_data2[72] = process_extracted_numeric(processed_data2[72])
+
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_language"
         if len(processed_data2) > 76:
-            processed_data2[76] = extract_numeric(processed_data2[76] )
+            processed_data2[76] = process_extracted_numeric(processed_data2[76] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_language"
         if len(processed_data2) > 77:
             # processed_data2[77] = extract_numeric(processed_data2[77] )
-            processed_data2[77] = round(extract_numeric(processed_data2[77]))
+            processed_data2[77] = process_extracted_numeric(processed_data2[77])
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_other_skills"
         if len(processed_data2) > 81:
-            processed_data2[81] = extract_numeric(processed_data2[81] )
+            processed_data2[81] = process_extracted_numeric(processed_data2[81] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_other_skills"
         if len(processed_data2) > 82:
             # processed_data2[82] = extract_numeric(processed_data2[82] )
-            processed_data2[82] = round(extract_numeric(processed_data2[82]))
+            processed_data2[82] = process_extracted_numeric(processed_data2[82])
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_infant_child"
         if len(processed_data2) > 92:
-            processed_data2[92] = extract_numeric(processed_data2[92] )
+            processed_data2[92] = process_extracted_numeric(processed_data2[92] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_infant_child"
         if len(processed_data2) > 93:
             # processed_data2[93] = extract_numeric(processed_data2[93] )
-            processed_data2[93] = round(extract_numeric(processed_data2[93]))
+            processed_data2[93] = process_extracted_numeric(processed_data2[93])
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_elderly"
         if len(processed_data2) > 96:
-            processed_data2[96] = extract_numeric(processed_data2[96] )
+            processed_data2[96] = process_extracted_numeric(processed_data2[96] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_elderly"
         if len(processed_data2) > 97:
             # processed_data2[97] = extract_numeric(processed_data2[97] )
-            processed_data2[97] = round(extract_numeric(processed_data2[97]))
+            processed_data2[97] = process_extracted_numeric(processed_data2[97])
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_disabled"
         if len(processed_data2) > 100:
-            processed_data2[100] = extract_numeric(processed_data2[100] )
+            processed_data2[100] = process_extracted_numeric(processed_data2[100] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_disabled"
         if len(processed_data2) > 101:
             # processed_data2[101] = extract_numeric(processed_data2[101] )
-            processed_data2[101] = round(extract_numeric(processed_data2[101]))
+            processed_data2[101] = process_extracted_numeric(processed_data2[101])
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_housework"
         if len(processed_data2) > 104:
-            processed_data2[104] = extract_numeric(processed_data2[104] )
+            processed_data2[104] = process_extracted_numeric(processed_data2[104] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_housework"
         if len(processed_data2) > 105:
             # processed_data2[105] = extract_numeric(processed_data2[105] )
-            processed_data2[105] = round(extract_numeric(processed_data2[105]))
+            processed_data2[105] = process_extracted_numeric(processed_data2[105])
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_cooking"
         if len(processed_data2) > 109:
-            processed_data2[109] = extract_numeric(processed_data2[109] )
+            processed_data2[109] = process_extracted_numeric(processed_data2[109] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_cooking"
         if len(processed_data2) > 110:
             # processed_data2[110] = extract_numeric(processed_data2[110] )
-            processed_data2[110] = round(extract_numeric(processed_data2[110]))
+            processed_data2[110] = process_extracted_numeric(processed_data2[110])
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_language"
         if len(processed_data2) > 114:
-            processed_data2[114] = extract_numeric(processed_data2[114] )
+            processed_data2[114] = process_extracted_numeric(processed_data2[114] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_language"
         if len(processed_data2) > 115:
             # processed_data2[115] = extract_numeric(processed_data2[115] )
-            processed_data2[115] = round(extract_numeric(processed_data2[115]))
+            processed_data2[115] = process_extracted_numeric(processed_data2[115])
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_years_other_skills"
         if len(processed_data2) > 120:
-            processed_data2[120] = extract_numeric(processed_data2[120] )
+            processed_data2[120] = process_extracted_numeric(processed_data2[120] )
 
         # Special Case: Function to extract numeric characters from a string for "eval_trainingctr_stars_other_skills"
         if len(processed_data2) > 121:
             # processed_data2[121] = extract_numeric(processed_data2[121] )
-            processed_data2[121] = round(extract_numeric(processed_data2[121]))
+            processed_data2[121] = process_extracted_numeric(processed_data2[121])
 
 
         # Indices and default values to check for empty string and replace with "No"
