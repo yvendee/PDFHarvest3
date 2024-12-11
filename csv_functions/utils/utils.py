@@ -61,6 +61,11 @@ def save_csv(filename, header, data):
     # character cleansing in the list "header"
     header = [filter_accepted_chars(item) for item in header]
 
+    try:
+        print(header[72])
+    except:
+        pass
+
     # Modify specific header value if found
     for i in range(len(header)):
         if header[i] == 'language_english_experience':
@@ -231,6 +236,7 @@ def save_csv(filename, header, data):
     # clean the maid_expected_salary, only 0-9 character is allowed.
     processed_data2[3] = remove_non_digits(processed_data2[3])
 
+    
     try:
 
         # Special Case: Uppercase the second index in processed_data2
@@ -325,7 +331,9 @@ def save_csv(filename, header, data):
         # Special Case: Function to extract numeric characters from a string for "eval_agency_stars_cooking"
         if len(processed_data2) > 72:
             # processed_data2[72] = extract_numeric(processed_data2[72] )
+            print(processed_data2[72])
             processed_data2[72] = round(extract_numeric(processed_data2[72]))
+            print(processed_data2[72])
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_language"
         if len(processed_data2) > 76:
