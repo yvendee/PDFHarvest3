@@ -209,11 +209,14 @@ def save_csv(filename, header, data):
     #         return match.group()
     #     return ""  # or handle the case when no match is found
 
-    # Function to extract numeric value from a string // last added 12/11/2024
+    # Function to extract numeric value from a string or float
     def extract_numeric(data):
-        match = re.match(r'(\d+\.\d+|\d+)', data)
-        if match:
-            return float(match.group())  # Convert to float for proper rounding
+        if isinstance(data, str):  # Check if input is a string
+            match = re.match(r'(\d+\.\d+|\d+)', data)
+            if match:
+                return float(match.group())  # Convert to float
+        elif isinstance(data, (int, float)):  # If input is already numeric
+            return float(data)  # Just return the float value
         return 0.0  # Return a default numeric value if no match is found
 
     # Process each item in data list
