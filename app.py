@@ -675,6 +675,9 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             #     summary_dict["education"] = "secondary level (7-10 yrs)"
             elif cleaned_value in ["junior high school","secondary level (7-10yrs)","secondarylevel (7-10 yrs)","secondarylevel (7-10yrs)"]:
                 summary_dict["education"] = "secondary level (7-10 yrs)"
+            # Here we ensure any variation with "secondary" gets mapped correctly
+            elif "secondary" in cleaned_value:
+                summary_dict["education"] = "secondary level (7-10 yrs)"
             elif cleaned_value in valid_education_options:
                 summary_dict["education"] = cleaned_value
             else:
