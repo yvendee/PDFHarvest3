@@ -774,6 +774,26 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
         except Exception as e:
             print(f"Error occurred: {e}")
 
+        ## employment history
+        try:
+            # Define the marker strings before and after employment history
+            start_marker = '[employment history]:'
+            end_marker = '\n['
+
+            # Find the start and end positions of the employment history section
+            start_pos = summary_text.find(start_marker)
+            end_pos = summary_text.find(end_marker, start_pos)
+
+            # Extract the maid introduction section
+            if start_pos != -1 and end_pos != -1:
+                employment_history = summary_text[start_pos + len(start_marker):end_pos].strip()
+                # print(employment_history)
+                summary_dict["employment history"] = employment_history
+            else:
+                print("No employment history found in the input.")
+        except Exception as e:
+            print(f"Error occurred: {e}")
+
         ## marital status
         try:
             # Getting the value corresponding to the key "marital status"
