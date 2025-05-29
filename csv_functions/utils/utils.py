@@ -20,6 +20,41 @@ def filter_accepted_chars(item):
     # Use regular expression to filter out unwanted characters
     return ''.join(re.findall(accepted_chars_pattern, item))
 
+def get_maid_name_index(header, column_name):
+    try:
+        # Return the index of the specified column_name
+        return header.index(column_name)
+    except ValueError:
+        # Handle the case where column_name is not found in the header
+        return -1  # or any other default value or message
+
+def set_maid_status(maid_status_global):
+    if maid_status_global == "Transfer" or maid_status_global == "Ex-SG":
+        return "Yes"
+    elif maid_status_global == "New Maid":
+        return "No"
+    elif maid_status_global == "Others":
+        return maid_status_global  
+    else:
+        return maid_status_global     
+
+def format_age(data):
+    try:
+        # Check if the data matches the expected format (e.g., 6/4 or 6/4/5)
+        if '/' in data:
+            # Split the data by the slash
+            parts = data.split('/')
+            # Check if all parts are numbers
+            if all(part.isdigit() for part in parts):
+                # Join the parts with commas and append " years old"
+                return ', '.join(parts) + " years old"
+        # If it doesn't match the expected format, return the original data
+        return data
+    except Exception as e:
+        # Handle any unexpected errors and print the exception message
+        print(f"Error: {e}")
+        return data
+
 # Function to convert date format
 def convert_date_format(date_str):
     try:
@@ -304,10 +339,13 @@ def save_csv(filename, header, data):
             else:
                 processed_data2[23] = extract_numeric(processed_data2[23])
             
-
+        
         # Special Case: Function to extract numeric characters from a string for "children_count"
         if len(processed_data2) > 25:
             processed_data2[25] = process_extracted_numeric(processed_data2[25] )
+
+        ## # Special Case: for "children_ages"
+        processed_data2[26] = format_age(processed_data2[26])
 
         # Special Case: Function to extract numeric characters from a string for "eval_agency_years_infant_child"
         if len(processed_data2) > 54:
@@ -450,9 +488,9 @@ def save_csv(filename, header, data):
             34: "No", 
             35: "No", 
             36: "No",  ## "illness_operations"
-            40: "Yes",  ## "handle_pork"
-            41: "Yes",  ## "handle_beef"
-            42: "Yes",  ## "handle_pets"
+            40: "No",  ## "handle_pork"
+            41: "No",  ## "handle_beef"
+            42: "No",  ## "handle_pets"
             46: "No",  ## "eval_no_agency_no_trainingctr"
             51: "No",  ## "eval_agency_in_person_observation"
             53: "No",  ## "eval_agency_willing_infant_child"
@@ -472,19 +510,25 @@ def save_csv(filename, header, data):
             103: "No",  ## "eval_trainingctr_willing_housework"
             108: "No",  ## "eval_trainingctr_willing_cooking"
             113: "No",  ## "eval_trainingctr_willing_language"
-            118: "No",  ## "eval_trainingctr_willing_other_skills"
-            171: "No",  ## "prev_work_in_sg"
+            118: "Yes",  ## "eval_trainingctr_willing_other_skills"
+            119: "0",    ## "eval_trainingctr_years_other_skills"
+            # 171: "No",  ## "prev_work_in_sg"
 
-            174: "No", ## "avail_interview_not_available"
-            175: "No",  ## "avail_interview_phone"
-            176: "No",  ## "avail_interview_videoconference"
-            177: "No"   ##  "avail_interview_in_person"
+            174: "Yes", ## "avail_interview_not_available"
+            175: "Yes",  ## "avail_interview_phone"
+            176: "Yes",  ## "avail_interview_videoconference"
+            177: "Yes"   ##  "avail_interview_in_person"
         }
 
         for index, default_value in special_cases.items():
             if len(processed_data2) > index and processed_data2[index] == "":
                 processed_data2[index] = default_value
-            
+
+        ## "prev_work_in_sg"
+        if len(processed_data2) > 171:
+            processed_data2[171] = set_maid_status(processed_data2[171])
+
+
         # Convert "Yrs" or "Years" to "yrs" or "years" in processed_data2[22]
         if len(processed_data2) > 22:
             processed_data2[22] = processed_data2[22].replace("Yrs", "yrs").replace("Years", "years").replace("Level", "level")
