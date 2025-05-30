@@ -278,6 +278,11 @@ def save_csv(filename, header, data):
 
     # Function to process the extracted numeric value and round if valid
     def process_extracted_numeric(data):
+
+        # Return empty string if data contains "null"
+        if "null" in data:
+            return ""
+            
         # First, extract the numeric value
         extracted_value = extract_numeric2(data)
         
