@@ -1039,7 +1039,7 @@ def extract_images_with_faces(pdf_path):
                         print(f"Width-to-Height Ratio (w/h): {ratio:.2f}")  # Print the ratio ## commonly is 7 for banner
 
                         # Determine if it's a banner or a photo
-                        if ratio > 5:
+                        if ratio > 2:  ## change from 5 to 2
                             print("It's a banner.")
                             print("skipping..")
                         else:
