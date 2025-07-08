@@ -352,29 +352,32 @@ def save_csv(filename, header, data):
         #     sentences = re.split(r'\.\s*', text.strip())  # split on period followed by optional space(s)
         #     sentences = [s.strip() for s in sentences if s]  # remove empty strings and strip whitespace
         #     processed_data2[11] = ' '.join(f'<p>{s}.</p>' for s in sentences)
+
         if len(processed_data2) > 10:
             text = processed_data2[11].strip()
 
-            # Matches sentences ending with a period, avoiding breaking URLs
-            sentences = re.findall(r'https?://\S+|[^.?!]+[.?!]', text)
-            sentences = [s.strip() for s in sentences if s]
+            # Step 1: Extract all URLs first
+            url_pattern = r'https?://[^\s]+'
+            urls = re.findall(url_pattern, text)
 
-            processed_data2[11] = '\n'.join(f'<p>{s}</p>' for s in sentences)
+            # Step 2: Temporarily replace URLs with placeholders to avoid breaking them
+            for idx, url in enumerate(urls):
+                placeholder = f"__URL_{idx}__"
+                text = text.replace(url, placeholder)
 
-        # Special Case: Function to extract numeric characters from a string for "height_cm"
-        if len(processed_data2) > 14:
-            processed_data2[14] = extract_numeric(processed_data2[14])
+            # Step 3: Split into sentences, including ones not ending with punctuation
+            fragments = re.findall(r'[^.?!]+[.?!]|\S+', text)
 
-        # Special Case: Function to extract numeric characters from a string for "weight_kg"
-        if len(processed_data2) > 15:
-            processed_data2[15] = extract_numeric(processed_data2[15])
+            # Step 4: Restore URLs
+            for i, frag in enumerate(fragments):
+                for idx, url in enumerate(urls):
+                    placeholder = f"__URL_{idx}__"
+                    if placeholder in frag:
+                        fragments[i] = frag.replace(placeholder, url)
 
-        # Special Case: Function to extract numeric characters from a string for "siblings_count"
-        if len(processed_data2) > 23:
-            if processed_data2[23] == "":
-                processed_data2[23] = "0"
-            else:
-                processed_data2[23] = extract_numeric(processed_data2[23])
+            # Step 5: Wrap in <p> tags
+            processed_data2[11] = '\n'.join(f'<p>{frag.strip()}</p>' for frag in fragments if frag.strip())
+
             
         
         # Special Case: Function to extract numeric characters from a string for "children_count"
