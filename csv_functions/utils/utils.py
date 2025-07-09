@@ -355,30 +355,28 @@ def save_csv(filename, header, data):
 
         if len(processed_data2) > 10:
             text = processed_data2[11].strip()
-
-            # Step 1: Extract all URLs first
+            # Step 1: Extract URLs
             url_pattern = r'https?://[^\s]+'
             urls = re.findall(url_pattern, text)
 
-            # Step 2: Temporarily replace URLs with placeholders to avoid breaking them
+            # Step 2: Replace URLs with placeholders
             for idx, url in enumerate(urls):
                 placeholder = f"__URL_{idx}__"
                 text = text.replace(url, placeholder)
 
-            # Step 3: Split into sentences, including ones not ending with punctuation
-            fragments = re.findall(r'[^.?!]+[.?!]|\S+', text)
+            # Step 3: Split text by newlines and sentence endings
+            lines = re.split(r'(?<=[.?!])\s+|\n+', text)
 
             # Step 4: Restore URLs
-            for i, frag in enumerate(fragments):
+            for i, line in enumerate(lines):
                 for idx, url in enumerate(urls):
                     placeholder = f"__URL_{idx}__"
-                    if placeholder in frag:
-                        fragments[i] = frag.replace(placeholder, url)
+                    if placeholder in line:
+                        lines[i] = line.replace(placeholder, url)
 
-            # Step 5: Wrap in <p> tags
-            processed_data2[11] = '\n'.join(f'<p>{frag.strip()}</p>' for frag in fragments if frag.strip())
+            # Step 5: Wrap each non-empty line in <p> tags
+            processed_data2[11] = '\n'.join(f'<p>{line.strip()}</p>' for line in lines if line.strip())
 
-            
         
         # Special Case: Function to extract numeric characters from a string for "children_count"
         if len(processed_data2) > 25:
@@ -731,3 +729,110 @@ def save_csv(filename, header, data):
 # print(extract_numeric(data[72]))
 # save_csv(filename, header, data)
 # print("Done")
+
+
+# string = """
+
+# KHAING ZAR WAI is 24 years old Ex Singapore MDW form Myanmar
+
+# She has 2 siblings and she is No.1  
+# she is Single
+
+# From 2024 to 2024 she works in Singapore and has experience working there for 9 months  
+# It is a 3-storey house.  
+# She serves 5 people.  
+# Her job involves cooking, doing general housework such as sweeping, mopping, ironing, cleaning the bedrooms and bathrooms, and washing the car regularly to maintain cleanliness and order in the household.
+
+# From 2021 to 2023 she works in Myanmar and has experience working there for 2 years  
+# Her job involves taking care of a 3-year-old child.  
+# She helps with feeding, playing, and supervising the child’s activities.  
+# She makes sure the child is safe, happy, and well looked after.
+
+# In general, her household duties include sweeping, mopping, vacuuming, cleaning the bathrooms, dusting, washing dishes, ironing clothes, doing laundry, and cooking.
+
+# She can cook Myanmar food.  
+# She is eager to learn more local recipes and can easily follow recipes from YouTube or written instructions.
+
+# She can speak simple English.
+
+# She is willing to care for the elderly, babies, children, and individuals with disabilities as well.
+
+# Video & Telephone interviews are available.  
+# https://www.facebook.com/un  
+# http://unistarr.com.sg
+
+
+# """
+
+# string = """
+# https://www.facebook.com/un  
+# http://unistarr.com.sg
+
+# TALIA RATNASARI is 28 years old Ex Taiwan MDW from Indonesia. She has 1 brother and 2 sisters, she is No 3. She is Divorce and has 1 child age 7 years old. From 2022 to 2023 she works in Taiwan to Chinese employer and has experience working there for 1 year. It is an apartment with 3 rooms and 2 toilets. She serves 1 person: A Kong. Her job involves taking care of an 83-year-old A Kong who has dementia. She prepares his clothes daily, making sure he is dressed comfortably and appropriately. She also prepares his meals, ensuring he eats nutritious food suited to his needs. From 2018 to 2022 she works in Taiwan to Chinese employer and has experience working there for 4 years. It is an apartment with 4 rooms and 2 toilets. She serves 1 person: A Kong. Her job involves looking after a 75-year-old A Kong who has had a stroke. She performs suctioning to clear phlegm from his airway, feeds him through a feeding tube, and gently pats his back to help with breathing and coughing. She closely monitors him to ensure he receives proper care and support throughout the day. In general, her household duties include sweeping, mopping, vacuuming, cleaning the bathrooms, dusting, washing dishes, ironing clothes, doing laundry, and cooking. She can cook Indonesian and Chinese food. She is eager to learn more local recipes and can easily follow recipes from YouTube. She can speak Bahasa and simple English. She is willing to care for the elderly, babies, children, and individuals with disabilities as well. She is Not Afraid of Small Dog,
+
+# """
+
+# text = string.strip()
+
+# # Step 1: Extract all URLs first
+# url_pattern = r'https?://[^\s]+'
+# urls = re.findall(url_pattern, text)
+
+# # Step 2: Temporarily replace URLs with placeholders to avoid breaking them
+# for idx, url in enumerate(urls):
+#     placeholder = f"__URL_{idx}__"
+#     text = text.replace(url, placeholder)
+
+# # Step 3: Split into sentences, including ones not ending with punctuation
+# fragments = re.findall(r'[^.?!]+[.?!]|\S+', text)
+
+# # Step 4: Restore URLs
+# for i, frag in enumerate(fragments):
+#     for idx, url in enumerate(urls):
+#         placeholder = f"__URL_{idx}__"
+#         if placeholder in frag:
+#             fragments[i] = frag.replace(placeholder, url)
+
+# # Step 5: Wrap in <p> tags
+# out = '\n'.join(f'<p>{frag.strip()}</p>' for frag in fragments if frag.strip())
+
+# print(out)
+
+
+
+
+# string = """
+# https://www.facebook.com/un  
+# http://unistarr.com.sg
+
+# TALIA RATNASARI is 28 years old Ex Taiwan MDW from Indonesia. She has 1 brother and 2 sisters, she is No 3. She is Divorce and has 1 child age 7 years old. From 2022 to 2023 she works in Taiwan to Chinese employer and has experience working there for 1 year. It is an apartment with 3 rooms and 2 toilets. She serves 1 person: A Kong. Her job involves taking care of an 83-year-old A Kong who has dementia. She prepares his clothes daily, making sure he is dressed comfortably and appropriately. She also prepares his meals, ensuring he eats nutritious food suited to his needs. From 2018 to 2022 she works in Taiwan to Chinese employer and has experience working there for 4 years. It is an apartment with 4 rooms and 2 toilets. She serves 1 person: A Kong. Her job involves looking after a 75-year-old A Kong who has had a stroke. She performs suctioning to clear phlegm from his airway, feeds him through a feeding tube, and gently pats his back to help with breathing and coughing. She closely monitors him to ensure he receives proper care and support throughout the day. In general, her household duties include sweeping, mopping, vacuuming, cleaning the bathrooms, dusting, washing dishes, ironing clothes, doing laundry, and cooking. She can cook Indonesian and Chinese food. She is eager to learn more local recipes and can easily follow recipes from YouTube. She can speak Bahasa and simple English. She is willing to care for the elderly, babies, children, and individuals with disabilities as well. She is Not Afraid of Small Dog,
+
+# https://www.facebook.com/un  
+# http://unistarr.com.sg
+# """
+
+# text = string.strip()
+
+# # Step 1: Extract URLs
+# url_pattern = r'https?://[^\s]+'
+# urls = re.findall(url_pattern, text)
+
+# # Step 2: Replace URLs with placeholders
+# for idx, url in enumerate(urls):
+#     placeholder = f"__URL_{idx}__"
+#     text = text.replace(url, placeholder)
+
+# # Step 3: Split text by newlines and sentence endings
+# lines = re.split(r'(?<=[.?!])\s+|\n+', text)
+
+# # Step 4: Restore URLs
+# for i, line in enumerate(lines):
+#     for idx, url in enumerate(urls):
+#         placeholder = f"__URL_{idx}__"
+#         if placeholder in line:
+#             lines[i] = line.replace(placeholder, url)
+
+# # Step 5: Wrap each non-empty line in <p> tags
+# out = '\n'.join(f'<p>{line.strip()}</p>' for line in lines if line.strip())
+
+# print(out)
