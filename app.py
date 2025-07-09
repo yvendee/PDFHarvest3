@@ -1239,8 +1239,19 @@ def upload_files():
 
             filename = file.filename
             # print(filename)
+            # file_ext = os.path.splitext(filename)[1].lower()
+            # file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
             file_ext = os.path.splitext(filename)[1].lower()
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            # Rename the file: remove special chars, lowercase, keep alphanum, replace space with "_"
+            base_filename = os.path.splitext(filename)[0]
+            clean_name = re.sub(r'[^a-zA-Z0-9 ]', '', base_filename)  # remove special characters
+            clean_name = clean_name.lower().replace(' ', '_')  # lowercase and replace spaces
+            new_filename = f"{clean_name}{file_ext}"
+
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+            
             
             # Save the original file
             file.save(file_path)
