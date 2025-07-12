@@ -953,6 +953,7 @@ def resize_image_if_needed(image_pil):
 
 
 # Function to extract images with faces from a specific PDF file
+# Function to extract images with faces from a specific PDF file
 def extract_images_with_faces(pdf_path):
     global image_fullpath_with_face_list, face_cascade
     # Get the base name of the PDF file
@@ -1040,40 +1041,42 @@ def extract_images_with_faces(pdf_path):
                         print(f"Width-to-Height Ratio (w/h): {ratio:.2f}")  # Print the ratio ## commonly is 7 for banner
 
                         # Determine if it's a banner or a photo
-                        if ratio < 1 or ratio > 2: ## change from 5 to 2
+                        if ratio < 0.3 or ratio > 2: ## change from 5 to 2
+                        # if ratio > 5:
                             print("It's a banner.")
                             print("skipping..")
+
                             print("trying to detect face....")
-                            
-                            box_width_percentage = 150
-                            box_height_percentage = 150
+                            # box_width_percentage = 150
+                            # box_height_percentage = 150
 
-                            faces = face_cascade.detectMultiScale(image_cv2, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-                            if len(faces) > 0 and not face_found:
-                                face_found = True
-                                for (x, y, w, h) in faces:
-                                    center_x = x + w // 2
-                                    center_y = y + h // 2
+                            # faces = face_cascade.detectMultiScale(image_cv2, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+                            # if len(faces) > 0 and not face_found:
+                            #     print("face detected!")
+                            #     face_found = True
+                            #     for (x, y, w, h) in faces:
+                            #         center_x = x + w // 2
+                            #         center_y = y + h // 2
 
-                                    box_width = int(w * (box_width_percentage / 100))
-                                    box_height = int(h * (box_height_percentage / 100))
+                            #         box_width = int(w * (box_width_percentage / 100))
+                            #         box_height = int(h * (box_height_percentage / 100))
 
-                                    top_left_x = max(0, center_x - box_width // 2)
-                                    top_left_y = max(0, center_y - box_height // 2)
-                                    bottom_right_x = min(image_cv2.shape[1], center_x + box_width // 2)
-                                    bottom_right_y = min(image_cv2.shape[0], center_y + box_height // 2)
+                            #         top_left_x = max(0, center_x - box_width // 2)
+                            #         top_left_y = max(0, center_y - box_height // 2)
+                            #         bottom_right_x = min(image_cv2.shape[1], center_x + box_width // 2)
+                            #         bottom_right_y = min(image_cv2.shape[0], center_y + box_height // 2)
 
-                                    # Crop the image to the bounding box
-                                    cropped_face = image_cv2[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
-                                    cropped_face_pil = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
+                            #         # Crop the image to the bounding box
+                            #         cropped_face = image_cv2[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
+                            #         cropped_face_pil = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
                                     
-                                    # Save the cropped face image
-                                    cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
-                                    cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
-                                    cropped_face_pil.save(cropped_face_fullpath, "JPEG")
-                                    extracted_images.append(cropped_face_pil)
-                                    image_fullpath_with_face_list.append(cropped_face_fullpath)  
-                                    break
+                            #         # Save the cropped face image
+                            #         cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
+                            #         cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
+                            #         cropped_face_pil.save(cropped_face_fullpath, "JPEG")
+                            #         extracted_images.append(cropped_face_pil)
+                            #         image_fullpath_with_face_list.append(cropped_face_fullpath)  
+                            #         break
                         else:
                             print("It's a photo.")
                              # If a face is detected and no face has been found yet on the first page
@@ -1103,6 +1106,7 @@ def extract_images_with_faces(pdf_path):
     pdf_document.close()
     
     return image_fullpath_with_face_list
+
 
 # Load the pre-trained face detection classifier
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
