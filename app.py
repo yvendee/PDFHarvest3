@@ -1034,7 +1034,6 @@ def extract_images_with_faces(pdf_path):
                         image_fullpath_with_face_list.append(cropped_face_fullpath)  
                         break
             else:
-
                 print("The image size is NOT more than triple the size of the page size.")
                 # Convert to grayscale for face detection
                 gray_image = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2GRAY)
@@ -1211,9 +1210,6 @@ def extract_images_with_faces(pdf_path):
         if not face_found:
             print(f"Processed {pdf_path} --> no-picture-found")
             image_fullpath_with_face_list.append("no-picture-found")
-
-    except Exception as e:
-        print(f"Error has occurred during face detection: {e}")
 
     except Exception as e:
         print(f"Error has occurred during face detection: {e}")
