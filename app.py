@@ -1484,7 +1484,7 @@ def resize_image_if_needed(image_pil):
 #         return []
 
 # # Function to extract images with faces from a specific PDF file
-def extract_images_with_faces(pdf_path):
+def extract_images_with_faces(pdf_path, maidrefcode):
     global image_fullpath_with_face_list, face_cascade
     # Get the base name of the PDF file
     pdf_basename = os.path.splitext(os.path.basename(pdf_path))[0]
@@ -1588,7 +1588,8 @@ def extract_images_with_faces(pdf_path):
                 cropped_pil = Image.fromarray(cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB))
 
                 # Save cropped image
-                cropped_filename = f"{pdf_basename}_cropped_rectangle.jpg"
+                # cropped_filename = f"{pdf_basename}_cropped_rectangle.jpg"
+                cropped_filename = f"{maidrefcode}.jpg"
                 cropped_fullpath = os.path.join(main_folder, cropped_filename)
                 cropped_pil.save(cropped_fullpath, "JPEG")
 
@@ -1649,7 +1650,8 @@ def extract_images_with_faces(pdf_path):
                         cropped = original[y:y+h, x:x+w]
                         cropped_pil = Image.fromarray(cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB))
 
-                        cropped_filename = f"{pdf_basename}_cropped_rectangle_alt.jpg"
+                        # cropped_filename = f"{pdf_basename}_cropped_rectangle_alt.jpg"
+                        cropped_filename = f"{maidrefcode}.jpg"
                         cropped_fullpath = os.path.join(main_folder, cropped_filename)
                         cropped_pil.save(cropped_fullpath, "JPEG")
 
@@ -1730,7 +1732,8 @@ def extract_images_with_faces(pdf_path):
                             cropped_face_pil = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
                             
                             # Save the cropped face image
-                            cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
+                            # cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
+                            cropped_face_filename = f"{maidrefcode}.jpg"
                             cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
                             cropped_face_pil.save(cropped_face_fullpath, "JPEG")
                             extracted_images.append(cropped_face_pil)
@@ -1796,7 +1799,8 @@ def extract_images_with_faces(pdf_path):
                                             cropped_face_pil = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
 
                                             # Save the cropped face image
-                                            cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
+                                            # cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"  # Naming based on PDF base name
+                                            cropped_face_filename = f"{maidrefcode}.jpg"
                                             cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
                                             cropped_face_pil.save(cropped_face_fullpath, "JPEG")
                                             extracted_images.append(cropped_face_pil)
@@ -1807,7 +1811,8 @@ def extract_images_with_faces(pdf_path):
                                     # If a face is detected and no face has been found yet on the first page
                                     face_found = True
                                     
-                                    image_with_face_filename = f"{pdf_basename}_with_face.jpg"  # Naming based on PDF base name
+                                    # image_with_face_filename = f"{pdf_basename}_with_face.jpg"  # Naming based on PDF base name
+                                    image_with_face_filename = f"{maidrefcode}.jpg"
                                     image_with_face_fullpath = os.path.join(main_folder, image_with_face_filename)
 
                                     # Save the image 
@@ -1872,7 +1877,8 @@ def extract_images_with_faces(pdf_path):
                                     cropped_face_pil = Image.fromarray(cv2.cvtColor(cropped_face, cv2.COLOR_BGR2RGB))
 
                                     # Save the cropped face image
-                                    cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"
+                                    # cropped_face_filename = f"{pdf_basename}_cropped_face.jpg"
+                                    cropped_face_filename = f"{maidrefcode}.jpg"
                                     cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
                                     cropped_face_pil.save(cropped_face_fullpath, "JPEG")
                                     extracted_images.append(cropped_face_pil)
@@ -1902,12 +1908,12 @@ def extract_images_with_faces(pdf_path):
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 # Function to process a specific PDF file in the "uploads" folder
-def process_pdf_extract_image(filename):
+def process_pdf_extract_image(filename, maidrefcode):
     global EXTRACTED_PAGE_IMAGES_FOLDER
 
     pdf_path = os.path.join(UPLOAD_FOLDER, filename)
     if os.path.exists(pdf_path) and pdf_path.endswith(".pdf"):
-        extracted_images = extract_images_with_faces(pdf_path)
+        extracted_images = extract_images_with_faces(pdf_path, maidrefcode)
         # print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
         # save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
 
@@ -2152,9 +2158,13 @@ def process_files(session_id):
                 # Simulate processing of each file
                 # time.sleep(3)  # Simulate processing delay
 
-                process_pdf_extract_image(filename)
+                
                 pdf_path = os.path.join(UPLOAD_FOLDER, filename)
                 page_images, maid_ref_code = pdf_to_jpg(pdf_path, EXTRACTED_PAGE_IMAGES_FOLDER, session_id, zoom=2) ## ocr and analyzing
+                if not maid_ref_code or maid_ref_code.strip() == "":
+                    # Use filename (without extension) as maid_ref_code
+                    maid_ref_code = os.path.splitext(filename)[0]
+                process_pdf_extract_image(filename, maid_ref_code)
                 index += 1
                 progress[session_id]['current'] = index
                 maidrefcode_list.append(maid_ref_code)
@@ -2162,32 +2172,52 @@ def process_files(session_id):
             try:
                 # maidrefcode_list = ['SRANML240075','CML','AA']
                 # maidrefcode_list = ['CP760722', 'EI990522', 'aaa']
-                print(f"maid-ref-code-list: {maidrefcode_list}")
+                # print(f"maid-ref-code-list: {maidrefcode_list}")
 
-                seen = set()
-                result = []
+                # seen = set()
+                # result = []
 
-                for item in maidrefcode_list:
-                    if item not in seen:
-                        seen.add(item)
-                        result.append(item)
-                    else:
-                        new_code = generate_random_code()
-                        # Ensure new code doesn't clash with anything already in result
-                        while new_code in seen:
-                            new_code = generate_random_code()
-                        seen.add(new_code)
-                        result.append(new_code)
+                # for item in maidrefcode_list:
+                #     if item not in seen:
+                #         seen.add(item)
+                #         result.append(item)
+                #     else:
+                #         new_code = generate_random_code()
+                #         # Ensure new code doesn't clash with anything already in result
+                #         while new_code in seen:
+                #             new_code = generate_random_code()
+                #         seen.add(new_code)
+                #         result.append(new_code)
 
                 # print(result)
 
-                maidrefcode_list = result
+                # maidrefcode_list = result
 
-                print(f"new maid-ref-code-list: {maidrefcode_list}")
-                print(f"image-path-with-face-path: {image_fullpath_with_face_list}")
-                print(f"new-pdf-list-path: {new_pdf_list}")
+                print(f"--------------------------------")
 
-                rename_files(image_fullpath_with_face_list, maidrefcode_list) ## renaming extracted images
+                print(f"maid-ref-code-list: {session_id}")
+                for refcode in maidrefcode_list:
+                    print(f"**{refcode}")
+
+                print(f"--------------------------------")
+
+                print(f"image-path-with-face-path: {session_id}")
+                for path in image_with_face_list:
+                    print(f"**{path}")
+
+                print(f"--------------------------------")
+
+                print(f"new-pdf-list-path: {session_id}")
+                for path in new_pdf_list:
+                    print(f"**{path}")
+
+                print(f"--------------------------------")
+
+                # print(f"new maid-ref-code-list: {maidrefcode_list}")
+                # print(f"image-path-with-face-path: {image_fullpath_with_face_list}")
+                # print(f"new-pdf-list-path: {new_pdf_list}")
+
+                # rename_files(image_fullpath_with_face_list, maidrefcode_list) ## renaming extracted images
                 rename_files2(new_pdf_list, maidrefcode_list) ## renaming input pdf
                 save_log(os.path.join(EXTRACTED_PAGE_IMAGES_FOLDER, "logs.txt"),f"Processed Completed. Ready to download!")
             
@@ -2578,5 +2608,6 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
