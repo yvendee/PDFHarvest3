@@ -2202,7 +2202,7 @@ def process_files(session_id):
                 print(f"--------------------------------")
 
                 print(f"image-path-with-face-path: {session_id}")
-                for path in image_with_face_list:
+                for path in image_fullpath_with_face_list:
                     print(f"**{path}")
 
                 print(f"--------------------------------")
@@ -2608,6 +2608,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
