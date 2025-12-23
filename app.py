@@ -79,6 +79,7 @@ app.config['EXTRACTED_PAGE_IMAGES_FOLDER'] = EXTRACTED_PAGE_IMAGES_FOLDER
 # app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max upload size
 # Set maximum file size to 50 MB
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB
+BLANK_IMAGE_PATH = os.path.join("static", "img", "blank.jpg")
 
 # Define the path to the directory where the file is located
 FILE_DIRECTORY = os.path.dirname(__file__)
@@ -2609,6 +2610,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
