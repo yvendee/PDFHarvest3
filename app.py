@@ -1604,6 +1604,12 @@ def extract_images_with_faces(pdf_path, maidrefcode):
                 # bounded_pil = Image.fromarray(cv2.cvtColor(bounded_image, cv2.COLOR_BGR2RGB))
                 # bounded_pil.save(bounded_fullpath, "JPEG")
 
+                # GPT face validation
+                if detect_face_gpt4omini(cropped_fullpath) != "yes":
+                    # Replace cropped image with blank image using SAME filename
+                    shutil.copyfile(BLANK_IMAGE_PATH, cropped_fullpath)
+
+
                 extracted_images.append(cropped_pil)
                 image_fullpath_with_face_list.append(cropped_fullpath)
                 print(f"✅ Cropped image saved: {cropped_fullpath}")
@@ -1665,15 +1671,22 @@ def extract_images_with_faces(pdf_path, maidrefcode):
                         # bounded_fullpath = os.path.join(main_folder, bounded_filename)
                         # bounded_pil = Image.fromarray(cv2.cvtColor(bounded_image, cv2.COLOR_BGR2RGB))
                         # bounded_pil.save(bounded_fullpath, "JPEG")
-
+                        if detect_face_gpt4omini(cropped_fullpath) != "yes":
+                            # Replace cropped image with blank image using SAME filename
+                            shutil.copyfile(BLANK_IMAGE_PATH, cropped_fullpath)
+            
                         extracted_images.append(cropped_pil)
                         image_fullpath_with_face_list.append(cropped_fullpath)
                         print(f"✅ Alternate cropped image saved: {cropped_fullpath}")
                         # print(f"✅ Alternate bounded image saved: {bounded_fullpath}")
                         break
-                else:
-                    print("❌ Alternate detection also failed.")
-                    image_fullpath_with_face_list.append("no-picture-found")
+                    else:
+                        print("❌ Alternate detection also failed.")
+                        cropped_filename = f"{maidrefcode}.jpg"
+                        cropped_fullpath = os.path.join(main_folder, cropped_filename)
+                        shutil.copyfile(BLANK_IMAGE_PATH, cropped_fullpath)
+                        image_fullpath_with_face_list.append(cropped_fullpath)
+                        #image_fullpath_with_face_list.append("no-picture-found")
 
         else:
 
@@ -1738,6 +1751,10 @@ def extract_images_with_faces(pdf_path, maidrefcode):
                             cropped_face_filename = f"{maidrefcode}.jpg"
                             cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
                             cropped_face_pil.save(cropped_face_fullpath, "JPEG")
+                            if detect_face_gpt4omini(cropped_face_fullpath) != "yes":
+                                # Replace cropped image with blank image using SAME filename
+                                shutil.copyfile(BLANK_IMAGE_PATH, cropped_face_fullpath)
+                
                             extracted_images.append(cropped_face_pil)
                             image_fullpath_with_face_list.append(cropped_face_fullpath)  
 
@@ -1805,6 +1822,10 @@ def extract_images_with_faces(pdf_path, maidrefcode):
                                             cropped_face_filename = f"{maidrefcode}.jpg"
                                             cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
                                             cropped_face_pil.save(cropped_face_fullpath, "JPEG")
+                                            if detect_face_gpt4omini(cropped_face_fullpath) != "yes":
+                                                # Replace cropped image with blank image using SAME filename
+                                                shutil.copyfile(BLANK_IMAGE_PATH, cropped_face_fullpath)
+                                
                                             extracted_images.append(cropped_face_pil)
                                             image_fullpath_with_face_list.append(cropped_face_fullpath)  
                                             break
@@ -1819,6 +1840,14 @@ def extract_images_with_faces(pdf_path, maidrefcode):
 
                                     # Save the image 
                                     image_pil.save(image_with_face_fullpath, "JPEG")
+                 
+                                    # if os.path.exists(image_with_face_fullpath):
+                                    #     os.remove(image_with_face_fullpath)
+
+                                    if detect_face_gpt4omini(image_with_face_fullpath) != "yes":
+                                        # Replace  image with blank image using SAME filename
+                                        shutil.copyfile(BLANK_IMAGE_PATH, image_with_face_fullpath)
+
                                     extracted_images.append(image_pil)
                                     image_fullpath_with_face_list.append(image_with_face_fullpath)
                                     break 
@@ -1883,6 +1912,11 @@ def extract_images_with_faces(pdf_path, maidrefcode):
                                     cropped_face_filename = f"{maidrefcode}.jpg"
                                     cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
                                     cropped_face_pil.save(cropped_face_fullpath, "JPEG")
+                                                                            
+                                    if detect_face_gpt4omini(cropped_face_fullpath) != "yes":
+                                        # Replace cropped image with blank image using SAME filename
+                                        shutil.copyfile(BLANK_IMAGE_PATH, cropped_face_fullpath)
+                                
                                     extracted_images.append(cropped_face_pil)
                                     image_fullpath_with_face_list.append(cropped_face_fullpath) 
 
@@ -1890,6 +1924,10 @@ def extract_images_with_faces(pdf_path, maidrefcode):
                                 break
                             else:
                                 print("No face detected on the first page.")
+                                cropped_face_filename = f"{maidrefcode}.jpg"
+                                cropped_face_fullpath = os.path.join(main_folder, cropped_face_filename)
+                                shutil.copyfile(BLANK_IMAGE_PATH, cropped_face_fullpath)
+                                
 
             print(f"Processed {pdf_path}: {len(extracted_images)} images extracted with faces")
 
@@ -2610,6 +2648,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
