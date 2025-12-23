@@ -19,7 +19,8 @@ import cv2
 import numpy as np
 from PIL import Image
 from flask_cors import CORS
-from openai_api.utils.utils import ( get_summary_from_image, get_summary_from_text, get_summary_from_text_gpt4o, get_summary_from_text_test, get_summary_from_text_gpt4omini, get_summary_from_image_gpt4omini)
+from openai_api.utils.utils import ( get_summary_from_image, get_summary_from_text, get_summary_from_text_gpt4o, get_summary_from_text_test, get_summary_from_text_gpt4omini, get_summary_from_image_gpt4omini, detect_face_gpt4omini)
+
 from anthropic_api.utils.utils import ( get_summary_from_image_using_claude )
 
 from custom_prompt.utils.utils import read_custom_prompt
@@ -2608,6 +2609,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
