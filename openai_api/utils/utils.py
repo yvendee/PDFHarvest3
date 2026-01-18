@@ -505,7 +505,8 @@ def get_summary_from_image_gpt5mini(image_path):
         print("Sending image and text to OpenAI GPT5 Mini...")
         save_log(os.path.join(LOGPATH, "logs.txt"), "Sending image and text to OpenAI GPT5 Mini...")
 
-        client = OpenAI()
+        # client = OpenAI()
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         response = client.chat.completions.create(
             model="gpt-5-mini",
@@ -549,7 +550,8 @@ def get_summary_from_text_gpt5nano(custom_prompt, summarized_string):
     global LOGPATH
 
     try:
-        client = OpenAI()
+        # client = OpenAI()
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         response = client.chat.completions.create(
             model="gpt-5-nano",
@@ -587,7 +589,8 @@ def get_summary_from_text_gpt5mini(custom_prompt, summarized_string):
     global LOGPATH
 
     try:
-        client = OpenAI()
+        # client = OpenAI()
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
         response = client.chat.completions.create(
             model="gpt-5-mini",
@@ -620,5 +623,6 @@ def get_summary_from_text_gpt5mini(custom_prompt, summarized_string):
         save_log(os.path.join(LOGPATH, "logs.txt"), "[Failed] Sending text to OpenAI GPT5 Mini...")
         save_log(os.path.join(LOGPATH, "logs.txt"), f"Error generating summary from OpenAI GPT5 Mini: {e}")
         return f"Error generating summary: {e}"
+
 
 
