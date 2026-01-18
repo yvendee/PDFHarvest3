@@ -916,7 +916,22 @@ def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
 
         save_log(os.path.join(output_folder, "logs.txt"),f"Current OCR used is {current_ocr}")
 
-        if current_ocr == 'gpt4oOCR':
+        # if current_ocr == 'gpt4oOCR':
+        #     summary = get_summary_from_image(image_filename) ## summary text from gpt4o OCR
+        # elif current_ocr == 'tesseractOCR':
+        #     summary = extract_text_from_image(image_filename) ## extracted text from local tesseract OCR
+        # elif current_ocr == 'claudeOCR':
+        #     summary = get_summary_from_image_using_claude(image_filename) ## summary text from claude Haiku OCR
+        # elif current_ocr == 'gpt4ominiOCR':
+        #     summary = get_summary_from_image_gpt4omini(image_filename) ## summary text from gpt4omini OCR
+        # else:
+        #     summary = get_summary_from_image_gpt4omini(image_filename) ## summary text from gpt4omini OCR
+
+        if current_ocr == 'gpt5nanoOCR':
+            summary = get_summary_from_image_gpt5nano(image_filename) ## summary text from gpt5nano OCR
+        elif current_ocr == 'gpt5miniOCR':
+            summary = get_summary_from_image_gpt5mini(image_filename) ## summary text from gp5mini OCR
+        elif current_ocr == 'gpt4oOCR':
             summary = get_summary_from_image(image_filename) ## summary text from gpt4o OCR
         elif current_ocr == 'tesseractOCR':
             summary = extract_text_from_image(image_filename) ## extracted text from local tesseract OCR
@@ -926,6 +941,7 @@ def pdf_to_jpg(pdf_file, output_folder, session_id, zoom=2):
             summary = get_summary_from_image_gpt4omini(image_filename) ## summary text from gpt4omini OCR
         else:
             summary = get_summary_from_image_gpt4omini(image_filename) ## summary text from gpt4omini OCR
+
 
         # summary = "test"
         total_summary += summary + "\n"  # Add newline between summaries
@@ -2695,6 +2711,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
