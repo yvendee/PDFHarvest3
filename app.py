@@ -2529,8 +2529,12 @@ def settings_page():
 def toggle_ocr_setting(setting):
     global current_ocr  # Access the global variable
     
-    if setting in ['gpt4omini','gpt4o', 'tesseract', 'claude']:
+    if setting in ['gpt5nano', 'gpt5mini', 'gpt4omini','gpt4o', 'tesseract', 'claude']:
         # Set the current OCR setting based on the URL parameter
+        if setting == 'gpt5nano':
+            current_ocr = "gpt5nanoOCR"
+        if setting == 'gpt5mini':
+            current_ocr = "gpt5miniOCR"
         if setting == 'gpt4omini':
             current_ocr = "gpt4ominiOCR"
         if setting == 'gpt4o':
@@ -2547,6 +2551,27 @@ def toggle_ocr_setting(setting):
     else:
         return jsonify({'error': 'Invalid OCR setting'}), 400
 
+# def toggle_ocr_setting(setting):
+#     global current_ocr  # Access the global variable
+    
+#     if setting in ['gpt4omini','gpt4o', 'tesseract', 'claude']:
+#         # Set the current OCR setting based on the URL parameter
+#         if setting == 'gpt4omini':
+#             current_ocr = "gpt4ominiOCR"
+#         if setting == 'gpt4o':
+#             current_ocr = "gpt4oOCR"
+#         elif setting == 'tesseract':
+#             current_ocr = "tesseractOCR"
+#         elif setting == 'claude':
+#             current_ocr = "claudeOCR"
+        
+#         # Print the current value of current_ocr
+#         print(f"Current OCR setting: {current_ocr}")
+
+#         return jsonify({'message': f'Successfully set {setting} OCR setting'}), 200
+#     else:
+#         return jsonify({'error': 'Invalid OCR setting'}), 400
+
 # Route to retrieve current OCR setting
 @app.route('/current-ocr', methods=['GET'])
 def get_current_ocr():
@@ -2559,8 +2584,12 @@ def get_current_ocr():
 def toggle_st_setting(setting):
     global current_structured_text  # Access the global variable
     
-    if setting in ['gpt4omini', 'gpt35']:
+    if setting in ['gpt5nano', 'gpt5mini', 'gpt4omini', 'gpt35']:
         # Set the current Structured Text setting based on the URL parameter
+        if setting == 'gpt5nano':
+            current_structured_text = "gpt5nano"
+        if setting == 'gpt5mini':
+            current_structured_text = "gpt5mini"
         if setting == 'gpt4omini':
             current_structured_text = "gpt4omini"
         elif setting == 'gpt35':
@@ -2572,6 +2601,23 @@ def toggle_st_setting(setting):
         return jsonify({'message': f'Successfully set {setting} Structured Text setting'}), 200
     else:
         return jsonify({'error': 'Invalid Structured Text setting'}), 400
+
+# def toggle_st_setting(setting):
+#     global current_structured_text  # Access the global variable
+    
+#     if setting in ['gpt4omini', 'gpt35']:
+#         # Set the current Structured Text setting based on the URL parameter
+#         if setting == 'gpt4omini':
+#             current_structured_text = "gpt4omini"
+#         elif setting == 'gpt35':
+#             current_structured_text = "gpt35"
+        
+#         # Print the current value of current_structured_text
+#         print(f"Current Structured Text setting: {current_structured_text}")
+
+#         return jsonify({'message': f'Successfully set {setting} Structured Text setting'}), 200
+#     else:
+#         return jsonify({'error': 'Invalid Structured Text setting'}), 400
 
 # Route to retrieve current structured text setting
 @app.route('/current-st', methods=['GET'])
@@ -2648,6 +2694,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
