@@ -377,7 +377,19 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
 
         # total_summary += custom_prompt + "\n"
 
-        if current_structured_text == 'gpt35':
+        if current_structured_text == 'gpt5mini':
+
+            print("Sending text to OpenAI  GPT 5 Mini...")
+            save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT5...")
+            summary_text = get_summary_from_text_gpt5mini(custom_prompt, total_summary) ## summary text from gpt3.5
+
+        elif current_structured_text == 'gpt5nano':
+
+            print("Sending text to OpenAI  GPT 5 Nano...")
+            save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT5...")
+            summary_text = get_summary_from_text_gpt5nano(custom_prompt, total_summary) ## summary text from gpt3.5
+
+        elif current_structured_text == 'gpt35':
 
             # Count words in the input string
             word_count = count_words(total_summary)
@@ -394,6 +406,7 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
                 save_log(os.path.join(output_folder, "logs.txt"),"Words limit exceeds..switching to GPT4o")
                 save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT4o...")
                 summary_text = get_summary_from_text_gpt4o(custom_prompt, total_summary) ## summary text from gpt4o
+        
         else:  ## gpt4omini
 
             # Count words in the input string
@@ -402,6 +415,33 @@ def summary_generation(total_summary, output_folder, base_name, session_id):
             print("Sending text to OpenAI  GPT4omini...")
             save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT4omini...")
             summary_text = get_summary_from_text_gpt4omini(custom_prompt, total_summary) ## summary text from gpt4omini
+
+
+        # if current_structured_text == 'gpt35':
+
+        #     # Count words in the input string
+        #     word_count = count_words(total_summary)
+
+        #     print(f"word count: {word_count}")
+        #     save_log(os.path.join(output_folder, "logs.txt"),f"word count: {word_count} , gpt3.5 words limit is 3000")
+            
+        #     # Check word count and print appropriate message
+        #     if word_count <= 2900:
+        #         print("Sending text to OpenAI  GPT3.5...")
+        #         save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT3.5...")
+        #         summary_text = get_summary_from_text(custom_prompt, total_summary) ## summary text from gpt3.5
+        #     else:
+        #         save_log(os.path.join(output_folder, "logs.txt"),"Words limit exceeds..switching to GPT4o")
+        #         save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT4o...")
+        #         summary_text = get_summary_from_text_gpt4o(custom_prompt, total_summary) ## summary text from gpt4o
+        # else:  ## gpt4omini
+
+        #     # Count words in the input string
+        #     word_count = count_words(total_summary)
+
+        #     print("Sending text to OpenAI  GPT4omini...")
+        #     save_log(os.path.join(output_folder, "logs.txt"),"Sending text to OpenAI GPT4omini...")
+        #     summary_text = get_summary_from_text_gpt4omini(custom_prompt, total_summary) ## summary text from gpt4omini
 
         ## test
         # summary_text = get_summary_from_text_test(total_summary)
@@ -2711,6 +2751,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
