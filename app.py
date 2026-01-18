@@ -2533,11 +2533,11 @@ def toggle_ocr_setting(setting):
         # Set the current OCR setting based on the URL parameter
         if setting == 'gpt5nano':
             current_ocr = "gpt5nanoOCR"
-        if setting == 'gpt5mini':
+        elif setting == 'gpt5mini':
             current_ocr = "gpt5miniOCR"
-        if setting == 'gpt4omini':
+        elif setting == 'gpt4omini':
             current_ocr = "gpt4ominiOCR"
-        if setting == 'gpt4o':
+        elif setting == 'gpt4o':
             current_ocr = "gpt4oOCR"
         elif setting == 'tesseract':
             current_ocr = "tesseractOCR"
@@ -2550,6 +2550,7 @@ def toggle_ocr_setting(setting):
         return jsonify({'message': f'Successfully set {setting} OCR setting'}), 200
     else:
         return jsonify({'error': 'Invalid OCR setting'}), 400
+
 
 # def toggle_ocr_setting(setting):
 #     global current_ocr  # Access the global variable
@@ -2694,6 +2695,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
