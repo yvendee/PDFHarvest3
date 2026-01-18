@@ -441,7 +441,7 @@ def get_summary_from_image_gpt5nano(image_path):
             model="gpt-5-nano",
             messages=[
                 {
-                    "role": "system",
+                    "role": "developer",
                     "content": [
                         {
                             "type": "text",
@@ -460,11 +460,12 @@ def get_summary_from_image_gpt5nano(image_path):
                     ]
                 }
             ],
-            temperature=1,
-            max_tokens=16383,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
+            response_format={
+                "type": "text"
+              },
+            verbosity="medium",
+            reasoning_effort="medium",
+            store=False
         )
 
         save_log(os.path.join(LOGPATH, "logs.txt"), "[Success] Received data from OpenAI GPT5 Nano")
@@ -510,7 +511,7 @@ def get_summary_from_image_gpt5mini(image_path):
             model="gpt-5-mini",
             messages=[
                 {
-                    "role": "system",
+                    "role": "developer",
                     "content": [
                         {
                             "type": "text",
@@ -529,11 +530,12 @@ def get_summary_from_image_gpt5mini(image_path):
                     ]
                 }
             ],
-            temperature=1,
-            max_tokens=16383,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
+            response_format={
+                "type": "text"
+              },
+            verbosity="medium",
+            reasoning_effort="medium",
+            store=False
         )
 
         save_log(os.path.join(LOGPATH, "logs.txt"), "[Success] Received data from OpenAI GPT5 Mini")
@@ -554,7 +556,7 @@ def get_summary_from_text_gpt5nano(custom_prompt, summarized_string):
             model="gpt-5-nano",
             messages=[
                 {
-                    "role": "system",
+                    "role": "developer",
                     "content": f"You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements. {custom_prompt}"
                 },
                 {
@@ -562,11 +564,12 @@ def get_summary_from_text_gpt5nano(custom_prompt, summarized_string):
                     "content": summarized_string
                 }
             ],
-            temperature=0.3,
-            max_tokens=16383,
-            top_p=0.9,
-            frequency_penalty=0.1,
-            presence_penalty=0.1
+            response_format={
+                "type": "text"
+              },
+            verbosity="medium",
+            reasoning_effort="medium",
+            store=False
         )
 
         print("[Success] Sending text to OpenAI GPT5 Nano")
@@ -592,7 +595,7 @@ def get_summary_from_text_gpt5mini(custom_prompt, summarized_string):
             model="gpt-5-mini",
             messages=[
                 {
-                    "role": "system",
+                    "role": "developer",
                     "content": f"You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements. {custom_prompt}"
                 },
                 {
@@ -600,11 +603,12 @@ def get_summary_from_text_gpt5mini(custom_prompt, summarized_string):
                     "content": summarized_string
                 }
             ],
-            temperature=0.3,
-            max_tokens=16383,
-            top_p=0.9,
-            frequency_penalty=0.1,
-            presence_penalty=0.1
+        response_format={
+            "type": "text"
+          },
+        verbosity="medium",
+        reasoning_effort="medium",
+        store=False
         )
 
         print("[Success] Sending text to OpenAI GPT5 Mini")
