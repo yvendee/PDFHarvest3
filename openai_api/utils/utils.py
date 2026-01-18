@@ -462,7 +462,7 @@ def get_summary_from_image_gpt5nano(image_path):
             ],
             response_format={
                 "type": "text"
-              },,
+              },
             reasoning_effort="medium",
             store=False
         )
@@ -621,6 +621,7 @@ def get_summary_from_text_gpt5mini(custom_prompt, summarized_string):
         save_log(os.path.join(LOGPATH, "logs.txt"), "[Failed] Sending text to OpenAI GPT5 Mini...")
         save_log(os.path.join(LOGPATH, "logs.txt"), f"Error generating summary from OpenAI GPT5 Mini: {e}")
         return f"Error generating summary: {e}"
+
 
 
 
