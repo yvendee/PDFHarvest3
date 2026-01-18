@@ -41,11 +41,11 @@ USERNAME = "searchmaid"
 PASSWORD = "maidasia"
 
 # Global variable to store current OCR setting
-current_ocr = "gpt4ominiOCR"
+current_ocr = "gpt5nanoOCR"
 
 # Global variable to store structured text setting
 # current_structured_text = "gpt4omini"
-current_structured_text = "gpt4omini"
+current_structured_text = "gpt5nano"
 maid_status_global = "None"
 
 # Define a decorator function to check if the user is authenticated
@@ -2694,6 +2694,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
