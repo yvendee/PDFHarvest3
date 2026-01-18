@@ -406,3 +406,216 @@ def get_summary_from_image_gpt4omini(image_path):
     save_log(os.path.join(LOGPATH, "logs.txt"),f"Error generating summary from OpenAI GPT4omini: {e}")
     return f"Error generating summary: {e}"
 
+def get_summary_from_image_gpt5nano(image_path):
+    try:
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
+            base64_image = base64.b64encode(image_data).decode('utf-8')
+
+        image_data = base64.b64decode(base64_image)
+        np_arr = np.frombuffer(image_data, np.uint8)
+        img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        scale_percent = 100
+        width = int(gray_img.shape[1] * scale_percent / 100)
+        height = int(gray_img.shape[0] * scale_percent / 100)
+        small_gray_img = cv2.resize(gray_img, (width, height), interpolation=cv2.INTER_AREA)
+
+        _, buffer = cv2.imencode('.jpg', small_gray_img)
+        base64_gray_image = base64.b64encode(buffer).decode('utf-8')
+
+        image_url_payload = {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{base64_gray_image}"
+            }
+        }
+
+        print("Sending image and text to OpenAI GPT5 Nano...")
+        save_log(os.path.join(LOGPATH, "logs.txt"), "Sending image and text to OpenAI GPT5 Nano...")
+
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+            model="gpt-5-nano",
+            messages=[
+                {
+                    "role": "system",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "You are an OCR tool. Extract and transcribe content exactly as shown, preserving formatting, tables, and checkboxes."
+                        }
+                    ]
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Extract and transcribe the image exactly as it appears."
+                        },
+                        image_url_payload
+                    ]
+                }
+            ],
+            temperature=1,
+            max_tokens=16383,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+
+        save_log(os.path.join(LOGPATH, "logs.txt"), "[Success] Received data from OpenAI GPT5 Nano")
+        return response.choices[0].message.content
+
+    except Exception as e:
+        save_log(os.path.join(LOGPATH, "logs.txt"), f"[Failed] GPT5 Nano error: {e}")
+        return f"Error generating summary: {e}"
+
+
+def get_summary_from_image_gpt5mini(image_path):
+    try:
+        with open(image_path, 'rb') as f:
+            image_data = f.read()
+            base64_image = base64.b64encode(image_data).decode('utf-8')
+
+        image_data = base64.b64decode(base64_image)
+        np_arr = np.frombuffer(image_data, np.uint8)
+        img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        scale_percent = 100
+        width = int(gray_img.shape[1] * scale_percent / 100)
+        height = int(gray_img.shape[0] * scale_percent / 100)
+        small_gray_img = cv2.resize(gray_img, (width, height), interpolation=cv2.INTER_AREA)
+
+        _, buffer = cv2.imencode('.jpg', small_gray_img)
+        base64_gray_image = base64.b64encode(buffer).decode('utf-8')
+
+        image_url_payload = {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{base64_gray_image}"
+            }
+        }
+
+        print("Sending image and text to OpenAI GPT5 Mini...")
+        save_log(os.path.join(LOGPATH, "logs.txt"), "Sending image and text to OpenAI GPT5 Mini...")
+
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+            model="gpt-5-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "You are an OCR tool. Extract and transcribe content exactly as shown, preserving formatting, tables, and checkboxes."
+                        }
+                    ]
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Extract and transcribe the image exactly as it appears."
+                        },
+                        image_url_payload
+                    ]
+                }
+            ],
+            temperature=1,
+            max_tokens=16383,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+
+        save_log(os.path.join(LOGPATH, "logs.txt"), "[Success] Received data from OpenAI GPT5 Mini")
+        return response.choices[0].message.content
+
+    except Exception as e:
+        save_log(os.path.join(LOGPATH, "logs.txt"), f"[Failed] GPT5 Mini error: {e}")
+        return f"Error generating summary: {e}"
+
+
+def get_summary_from_text_gpt5nano(custom_prompt, summarized_string):
+    global LOGPATH
+
+    try:
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+            model="gpt-5-nano",
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements. {custom_prompt}"
+                },
+                {
+                    "role": "user",
+                    "content": summarized_string
+                }
+            ],
+            temperature=0.3,
+            max_tokens=16383,
+            top_p=0.9,
+            frequency_penalty=0.1,
+            presence_penalty=0.1
+        )
+
+        print("[Success] Sending text to OpenAI GPT5 Nano")
+        save_log(os.path.join(LOGPATH, "logs.txt"), "[Success] Sending text to OpenAI GPT5 Nano")
+
+        summary = response.choices[0].message.content
+        save_log(os.path.join(LOGPATH, "logs.txt"), "Received data from OpenAI GPT5 Nano")
+        return summary
+
+    except Exception as e:
+        save_log(os.path.join(LOGPATH, "logs.txt"), "[Failed] Sending text to OpenAI GPT5 Nano...")
+        save_log(os.path.join(LOGPATH, "logs.txt"), f"Error generating summary from OpenAI GPT5 Nano: {e}")
+        return f"Error generating summary: {e}"
+
+
+def get_summary_from_text_gpt5mini(custom_prompt, summarized_string):
+    global LOGPATH
+
+    try:
+        client = OpenAI()
+
+        response = client.chat.completions.create(
+            model="gpt-5-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"You are an assistant that generates structured text output in a specific format. Always follow the structure and instructions provided without omitting any elements. {custom_prompt}"
+                },
+                {
+                    "role": "user",
+                    "content": summarized_string
+                }
+            ],
+            temperature=0.3,
+            max_tokens=16383,
+            top_p=0.9,
+            frequency_penalty=0.1,
+            presence_penalty=0.1
+        )
+
+        print("[Success] Sending text to OpenAI GPT5 Mini")
+        save_log(os.path.join(LOGPATH, "logs.txt"), "[Success] Sending text to OpenAI GPT5 Mini")
+
+        summary = response.choices[0].message.content
+        save_log(os.path.join(LOGPATH, "logs.txt"), "Received data from OpenAI GPT5 Mini")
+        return summary
+
+    except Exception as e:
+        save_log(os.path.join(LOGPATH, "logs.txt"), "[Failed] Sending text to OpenAI GPT5 Mini...")
+        save_log(os.path.join(LOGPATH, "logs.txt"), f"Error generating summary from OpenAI GPT5 Mini: {e}")
+        return f"Error generating summary: {e}"
+
