@@ -9,6 +9,65 @@ from log_functions.utils.utils import save_log
 
 LOGPATH = 'output_pdf2images'
 
+def detect_face_gpt5nano(image_path):
+    try:
+        # Read and base64-encode image
+        with open(image_path, "rb") as f:
+            image_bytes = f.read()
+            base64_image = base64.b64encode(image_bytes).decode("utf-8")
+
+        # Prepare the OpenAI payload
+        image_payload = {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{base64_image}"
+            }
+        }
+
+        client = OpenAI()
+
+        # Ask GPT5 Nano to answer yes/no only
+        response = client.chat.completions.create(
+            model="gpt-5-nano",
+            messages=[
+                {
+                    "role": "developer",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Answer strictly with 'yes' or 'no'."
+                        }
+                    ]
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Is the image showing a human face? Respond only with 'yes' or 'no'."
+                        },
+                        image_payload
+                    ]
+                }
+            ],
+            max_tokens=3,
+            temperature=0,
+            response_format={
+                "type": "text"
+            }
+        )
+
+        answer = response.choices[0].message.content.strip().lower()
+
+        if answer.startswith("y"):
+            return "yes"
+        else:
+            return "no"
+
+    except Exception as e:
+        return f"Error: {e}"
+
+
 def detect_face_gpt4omini(image_path):
 
     try:
@@ -614,6 +673,7 @@ def get_summary_from_text_gpt5mini(custom_prompt, summarized_string):
         save_log(os.path.join(LOGPATH, "logs.txt"), "[Failed] Sending text to OpenAI GPT5 Mini...")
         save_log(os.path.join(LOGPATH, "logs.txt"), f"Error generating summary from OpenAI GPT5 Mini: {e}")
         return f"Error generating summary: {e}"
+
 
 
 
