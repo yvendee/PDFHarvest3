@@ -2145,6 +2145,8 @@ def upload_files():
             clean_name = clean_name[:20]
     
             new_filename = f"{clean_name}{file_ext}"
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+            
             # file_path = os.path.join(session_folder, new_filename)
     
             # 🔹 Handle duplicate filenames
@@ -2153,12 +2155,10 @@ def upload_files():
                 # leave space for suffix like _1, _2, etc.
                 truncated_name = clean_name[:20 - len(f"_{counter}")]
                 new_filename = f"{truncated_name}_{counter}{file_ext}"
-                file_path = os.path.join(session_folder, new_filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
                 counter += 1
             
-            # new_filename = f"{clean_name}{file_ext}"
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
-            
+
             # Save the original file
             file.save(file_path)
             uploaded_files.append(new_filename)
@@ -2761,6 +2761,7 @@ def download_logs():
 if __name__ == '__main__':
     app.run(debug=True)
     app.run(host='0.0.0.0', port=3000)
+
 
 
 
